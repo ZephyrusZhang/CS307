@@ -1,4 +1,4 @@
-package dataimport.entity;
+package DML.entity;
 
 public class Product {
     public String product_code;

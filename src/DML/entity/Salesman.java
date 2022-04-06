@@ -1,4 +1,4 @@
-package dataimport.entity;
+package DML.entity;
 
 public class Salesman {
     public String firstname;
