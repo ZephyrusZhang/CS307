@@ -30,15 +30,15 @@ public class DataImport {
                 data = line.split(",");
 
                 product = new Product(data[6], data[8]);
-                dm.addRawOneProduct(product);
+                dm.addOneProductByEntity(product);
 
                 model = new Model(data[8], Integer.parseInt(data[9]), data[6]);
-                dm.addRawOneModel(model);
+                dm.addOneModelByEntity(model);
 
                 String[] countries = data[3].split("/");
                 for (String country : countries) {
                     location = new Location(country, data[4]);
-                    dm.addRawOneLocation(location);
+                    dm.addOneLocationByEntity(location);
                 }
 
                 salesmanName = data[15].split(" ");
@@ -50,16 +50,16 @@ public class DataImport {
                     salesman = new Salesman(salesmanName[0], salesmanName[1], data[16], data[17], Integer.parseInt(data[18]), data[19]);
                     contract = new Contract(data[0], data[11], directorName[0], directorName[1], data[1]);
                 }
-                dm.addRawOneSalesman(salesman);
-                dm.addRawOneContract(contract);
+                dm.addOneSalesmanByEntity(salesman);
+                dm.addOneContractByEntity(contract);
 
                 enterprise = new Enterprise(data[1], data[5], -1, data[2]);
-                dm.addRawOneEnterprise(enterprise);
+                dm.addOneEnterpriseByEntity(enterprise);
 
                 orders = new Orders(Integer.parseInt(data[10]), data[12], data[13], data[8], -1, data[0]);
-                dm.addRawOneOrders(orders);
+                dm.addOneOrdersByEntity(orders);
             }
-            dm.cleanRawData();
+            dm.cleanData();
             long endTime = System.currentTimeMillis();
             long timeUsed = (endTime - startTime) / 1000;
             System.out.printf("Data import procedure cost %d s\n", timeUsed);

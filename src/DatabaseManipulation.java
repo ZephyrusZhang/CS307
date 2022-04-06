@@ -14,7 +14,7 @@ public class DatabaseManipulation implements DataManipulation {
         try {
             Class.forName("org.postgresql.Driver");
 
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
             System.err.println("Cannot find the PostgresSQL driver. Check CLASSPATH.");
             System.exit(1);
         }
@@ -50,7 +50,7 @@ public class DatabaseManipulation implements DataManipulation {
 
     //region Import Data Using Entity Class
     @Override
-    public void addRawOneProduct(Product product) {
+    public void addOneProductByEntity(Product product) {
         String sql = "insert into product (product_code, product_name)" +
                 "values (?, ?);";
         try {
@@ -68,7 +68,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addRawOneModel(Model model) {
+    public void addOneModelByEntity(Model model) {
         String sql = "insert into model (product_model, unit_price, product_code)" +
                 "values (?, ?, ?);";
         try {
@@ -87,7 +87,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addRawOneLocation(Location location) {
+    public void addOneLocationByEntity(Location location) {
         String sql = "insert into location (country, city)" +
                 "values (?, ?);";
         try {
@@ -105,7 +105,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addRawOneSalesman(Salesman salesman) {
+    public void addOneSalesmanByEntity(Salesman salesman) {
         String sql = "insert into salesman (first_name, surname, salesman_number, gender, age, mobile_phone)" +
                 "values (?, ?, ?, ?, ?, ?);";
         try {
@@ -127,7 +127,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addRawOneEnterprise(Enterprise enterprise) {
+    public void addOneEnterpriseByEntity(Enterprise enterprise) {
         String sql = "insert into enterprise (enterprise_name, industry, location_id, supply_center)" +
                 "values (?, ?, ?, ?);";
         try {
@@ -148,7 +148,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addRawOneContract(Contract contract) {
+    public void addOneContractByEntity(Contract contract) {
         String sql = "insert into contract (contract_number, contract_date, director_firstname, director_surname, client_enterprise)" +
                 "values (?, ?, ?, ?, ?);";
         try {
@@ -170,7 +170,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addRawOneOrders(Orders orders) throws ParseException {
+    public void addOneOrdersByEntity(Orders orders) throws ParseException {
         String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date, product_model, sales_id, contract_number)" +
                 "values (?, ?, ?, ?, ?, ?);";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -206,7 +206,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void cleanRawData() {
+    public void cleanData() {
         String sql = "update location set city = null where city = 'NULL'";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
