@@ -270,4 +270,161 @@ public class DatabaseManipulation implements DataManipulation {
     }
     //endregion
 
+    //TODO Hashmap by argument
+    @Override
+    public int addOneProduct(String product_code, String product_name){
+        int result=0;
+        String sql = "insert into product (product_code, product_name)"+
+                "values (?,?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, product_code);
+            preparedStatement.setString(2, product_name);
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException ignored){
+        }
+        return result;
+    }
+
+    @Override
+    public int addOneModel(String product_model, int unit_price, int product_id){
+        int result=0;
+        String sql = "insert into model (product_model, unit_price, product_id)"+
+                "values (?,?,?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, product_model);
+            preparedStatement.setInt(2, unit_price);
+            preparedStatement.setInt(3, product_id);
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException ignored){
+        }
+        return result;
+
+    }
+
+    @Override
+    public int addOneLocation(String country, String city){
+        int result=0;
+        String sql = "insert into location (country, city)"+
+                "values (?,?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, country);
+            preparedStatement.setString(2, city);
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException ignored){
+        }
+        return result;
+    }
+
+    @Override
+    public int addOneSalesman(String first_name, String surname, String salesman_number, String gender, int age, String mobile_phone) {
+        int result=0;
+        String sql = "insert into salesman(first_name, surname, salesman_number, gender, age, mobile_phone)"+
+                "values (?,?,?,?,?,?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, first_name);
+            preparedStatement.setString(2, surname);
+            preparedStatement.setString(3, salesman_number);
+            preparedStatement.setString(4, gender);
+            preparedStatement.setInt(5, age);
+            preparedStatement.setString(6, mobile_phone);
+
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException ignored){
+        }
+        return result;
+    }
+
+    @Override
+    public int addOneEnterprises(String enterprise_name, String industry,int location_id, String supply_center) {
+        int result=0;
+        String sql = "insert into enterprise (enterprise_name, industry,location_id, supply_center)"+
+                "values (?,?,?,?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, enterprise_name);
+            preparedStatement.setString(2, industry);
+            preparedStatement.setInt(3,location_id);
+            preparedStatement.setString(4, supply_center);
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException ignored){
+        }
+        return result;
+    }
+
+    @Override
+    public int addOneContract(String contract_number, Date contract_date, String director, int enterprise_id) {
+        int result=0;
+        String sql = "insert into contract (contract_number, contract_date, director, enterprise_id)"+
+                "values (?,?,?,?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, contract_number);
+            preparedStatement.setDate(2, contract_date);
+            preparedStatement.setString(3, director);
+            preparedStatement.setInt(4, enterprise_id);
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException ignored){
+        }
+        return result;
+    }
+
+    @Override
+    public int addOneOrder(int quantity, Date estimated_delivery_date, Date lodgement_date,int model_id, int salesman_id, int contract_id) {
+        int result=0;
+        String sql = "insert into order_ (quantity, estimated_delivery_date, lodgement_date,model_id, sales_id, contract_id)"+
+                "values (?,?,?,?,?,?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setDate(2, estimated_delivery_date);
+            preparedStatement.setDate(3, lodgement_date);
+            preparedStatement.setInt(4, model_id);
+            preparedStatement.setInt(5, salesman_id);
+            preparedStatement.setInt(6, contract_id);
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException ignored){
+        }
+        return result;
+    }
+
+    @Override
+    public int addOneOrder(int quantity, Date estimated_delivery_date,int model_id, int salesman_id, int contract_id) {
+        int result=0;
+        String sql = "insert into order_ (quantity, estimated_delivery_date, lodgement_date,model_id, sales_id, contract_id)"+
+                "values (?,?,?,?,?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setDate(2, estimated_delivery_date);
+            preparedStatement.setInt(3, model_id);
+            preparedStatement.setInt(4, salesman_id);
+            preparedStatement.setInt(5, contract_id);
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException ignored){
+        }
+        return result;
+    }
+
+
+
 }
