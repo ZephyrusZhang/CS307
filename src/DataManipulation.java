@@ -16,7 +16,7 @@ public interface DataManipulation {
     void cleanData();
     int getLocationID(String country, String city);
     void buildForeignKey();
-    void dropAllData();
+    void truncateAllTables();
     //TODO Hashmap by argument
     public int addOneProduct(String product_code, String product_name);
     public int addOneModel(String product_model, int unit_price, int product_id);

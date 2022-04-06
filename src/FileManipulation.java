@@ -57,7 +57,7 @@ public class FileManipulation implements DataManipulation {
     }
 
     @Override
-    public void dropAllData() {
+    public void truncateAllTables() {
 
     }
 

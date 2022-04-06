@@ -235,8 +235,8 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void dropAllData() {
-        String sql = "delete from ? where true;";
+    public void truncateAllTables() {
+        String sql = "truncate table ?;";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
 
