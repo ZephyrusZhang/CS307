@@ -1,6 +1,6 @@
-package dataImport;
+package dataimport;
 
-import dataImport.entity.*;
+import dataimport.entity.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

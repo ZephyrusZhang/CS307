@@ -1,4 +1,4 @@
-package dataImport.entity;
+package dataimport.entity;
 
 public class Contract {
     public String contract_number;

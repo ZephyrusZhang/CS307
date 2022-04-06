@@ -1,6 +1,6 @@
-package dataImport;
+package dataimport;
 
-import dataImport.entity.*;
+import dataimport.entity.*;
 
 import java.sql.*;
 import java.text.ParseException;

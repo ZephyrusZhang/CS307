@@ -1,4 +1,4 @@
-package dataImport.entity;
+package dataimport.entity;
 
 public class Orders {
     public int quantity;

@@ -1,6 +1,6 @@
-package dataImport;
+package dataimport;
 
-import dataImport.entity.*;
+import dataimport.entity.*;
 
 public class FileManipulation implements DataManipulation {
 

@@ -1,4 +1,4 @@
-package dataImport;
+package dataimport;
 
 public class Client {
 

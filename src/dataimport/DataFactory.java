@@ -1,4 +1,4 @@
-package dataImport;
+package dataimport;
 
 import java.lang.reflect.InvocationTargetException;
 
