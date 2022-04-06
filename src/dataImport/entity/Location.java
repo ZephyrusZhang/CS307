@@ -1,4 +1,4 @@
-package entity;
+package dataImport.entity;
 
 public class Location {
     public String country;

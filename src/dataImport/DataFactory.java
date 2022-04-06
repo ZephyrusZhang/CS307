@@ -1,12 +1,14 @@
+package dataImport;
+
 import java.lang.reflect.InvocationTargetException;
 
 public class DataFactory {
     public DataManipulation createDataManipulation(String arg) {
         String name;
         if (arg.toLowerCase().contains("file")) {
-            name = "FileManipulation";
+            name = "dataImport.FileManipulation";
         } else if (arg.toLowerCase().contains("database")) {
-            name = "DatabaseManipulation";
+            name = "dataImport.DatabaseManipulation";
         } else {
             throw new IllegalArgumentException("Illegal Argument:" + arg);
         }

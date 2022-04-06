@@ -1,4 +1,4 @@
-package entity;
+package dataImport.entity;
 
 public class Product {
     public String product_code;

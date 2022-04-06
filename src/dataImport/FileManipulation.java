@@ -1,4 +1,6 @@
-import entity.*;
+package dataImport;
+
+import dataImport.entity.*;
 
 public class FileManipulation implements DataManipulation {
 

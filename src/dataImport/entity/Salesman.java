@@ -1,4 +1,4 @@
-package entity;
+package dataImport.entity;
 
 public class Salesman {
     public String firstname;

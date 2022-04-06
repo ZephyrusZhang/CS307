@@ -1,4 +1,6 @@
-import entity.*;
+package dataImport;
+
+import dataImport.entity.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +16,7 @@ public class DataImport {
             DataManipulation dm = new DataFactory().createDataManipulation(way);
             dm.openDatasource();
 
-            dm.dropAllData();
+//            dm.dropAllData();
 
             BufferedReader reader = new BufferedReader(new FileReader("contract_info.csv"));
             String line;
