@@ -1,4 +1,4 @@
-package DML.entity;
+package entity;
 
 public class Contract {
     public String contract_number;

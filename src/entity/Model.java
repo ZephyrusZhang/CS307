@@ -1,4 +1,4 @@
-package DML.entity;
+package entity;
 
 public class Model {
     public String product_model;

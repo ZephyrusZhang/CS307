@@ -1,4 +1,4 @@
-package DML.entity;
+package entity;
 
 public class Location {
     public String country;

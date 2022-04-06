@@ -1,4 +1,4 @@
-package DML.entity;
+package entity;
 
 public class Enterprise {
     public String enterprise_name;

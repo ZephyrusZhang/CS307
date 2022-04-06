@@ -1,6 +1,4 @@
-package DML;
-
-import DML.entity.*;
+import entity.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

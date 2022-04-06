@@ -1,4 +1,4 @@
-package DML.entity;
+package entity;
 
 public class Orders {
     public int quantity;

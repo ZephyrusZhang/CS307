@@ -1,4 +1,4 @@
-package DML.entity;
+package entity;
 
 public class Product {
     public String product_code;
