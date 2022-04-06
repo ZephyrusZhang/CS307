@@ -6,9 +6,9 @@ public class DataFactory {
     public DataManipulation createDataManipulation(String arg) {
         String name;
         if (arg.toLowerCase().contains("file")) {
-            name = "dataImport.FileManipulation";
+            name = "dataimport.FileManipulation";
         } else if (arg.toLowerCase().contains("database")) {
-            name = "dataImport.DatabaseManipulation";
+            name = "dataimport.DatabaseManipulation";
         } else {
             throw new IllegalArgumentException("Illegal Argument:" + arg);
         }
