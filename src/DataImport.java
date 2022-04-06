@@ -41,15 +41,8 @@ public class DataImport {
                     dm.addOneLocationByEntity(location);
                 }
 
-                salesmanName = data[15].split(" ");
-                directorName = data[14].split(" ");
-                if (data[3].equals("China")) {
-                    salesman = new Salesman(salesmanName[1], salesmanName[0], data[16], data[17], Integer.parseInt(data[18]), data[19]);
-                    contract = new Contract(data[0], data[11], directorName[1], directorName[0], data[1]);
-                } else {
-                    salesman = new Salesman(salesmanName[0], salesmanName[1], data[16], data[17], Integer.parseInt(data[18]), data[19]);
-                    contract = new Contract(data[0], data[11], directorName[0], directorName[1], data[1]);
-                }
+                salesman = new Salesman(data[15], data[16], data[17], Integer.parseInt(data[18]), data[19]);
+                contract = new Contract(data[0], data[11], data[14], data[1]);
                 dm.addOneSalesmanByEntity(salesman);
                 dm.addOneContractByEntity(contract);
 
