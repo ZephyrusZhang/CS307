@@ -14,6 +14,11 @@ public class FileManipulation implements DataManipulation {
     }
 
     @Override
+    public void executeDDL() {
+
+    }
+
+    @Override
     public void addOneProductByEntity(Product product) {
     }
 
@@ -62,42 +67,34 @@ public class FileManipulation implements DataManipulation {
     }
 
     @Override
-    public int addOneProduct(String product_code, String product_name) {
-        return 0;
+    public void addOneProduct(String product_code, String product_name) {
     }
 
     @Override
-    public int addOneModel(String product_model, int unit_price, int product_id) {
-        return 0;
+    public void addOneModel(String product_model, int unit_price, int product_id) {
     }
 
     @Override
-    public int addOneLocation(String countries, String city) {
-        return 0;
+    public void addOneLocation(String countries, String city) {
     }
 
     @Override
-    public int addOneSalesman(String first_name, String surname, String salesman_number, String gender, int age, String mobile_phone) {
-        return 0;
+    public void addOneSalesman(String first_name, String surname, String salesman_number, String gender, int age, String mobile_phone) {
     }
 
     @Override
-    public int addOneEnterprises(String enterprise_name, String industry, int location_id, String supply_center) {
-        return 0;
+    public void addOneEnterprises(String enterprise_name, String industry, int location_id, String supply_center) {
     }
 
     @Override
-    public int addOneContract(String contract_number, Date contract_date, String director, int enterprise_id) {
-        return 0;
+    public void addOneContract(String contract_number, Date contract_date, String director, int enterprise_id) {
     }
 
     @Override
-    public int addOneOrder(int quantity, Date estimated_delivery_date, Date lodgement_date, int model_id, int salesman_id, int contract_id) {
-        return 0;
+    public void addOneOrder(int quantity, Date estimated_delivery_date, Date lodgement_date, int model_id, int salesman_id, int contract_id) {
     }
 
     @Override
-    public int addOneOrder(int quantity, Date estimated_delivery_date, int model_id, int salesman_id, int contract_id) {
-        return 0;
+    public void addOneOrder(int quantity, Date estimated_delivery_date, int model_id, int salesman_id, int contract_id) {
     }
 }

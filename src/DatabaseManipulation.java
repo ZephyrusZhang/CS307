@@ -1,5 +1,8 @@
 import entity.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,7 +10,6 @@ import java.text.SimpleDateFormat;
 public class DatabaseManipulation implements DataManipulation {
     private Connection con = null;
     private ResultSet resultSet;
-
 
     @Override
     public void openDatasource() {
@@ -45,6 +47,22 @@ public class DatabaseManipulation implements DataManipulation {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void executeDDL() {
+        StringBuilder sql = new StringBuilder("");
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("main.sql"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sql.append(line);
+            }
+            Statement statement = con.createStatement();
+            statement.executeUpdate(sql.toString());
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -269,7 +287,7 @@ public class DatabaseManipulation implements DataManipulation {
 
     //TODO Hashmap by argument
     @Override
-    public int addOneProduct(String product_code, String product_name) {
+    public void addOneProduct(String product_code, String product_name) {
         int result = 0;
         String sql = "insert into product (product_code, product_name)" +
                 "values (?,?)";
@@ -282,11 +300,10 @@ public class DatabaseManipulation implements DataManipulation {
 
         } catch (SQLException ignored) {
         }
-        return result;
     }
 
     @Override
-    public int addOneModel(String product_model, int unit_price, int product_id) {
+    public void addOneModel(String product_model, int unit_price, int product_id) {
         int result = 0;
         String sql = "insert into model (product_model, unit_price, product_id)" +
                 "values (?,?,?)";
@@ -300,12 +317,11 @@ public class DatabaseManipulation implements DataManipulation {
 
         } catch (SQLException ignored) {
         }
-        return result;
 
     }
 
     @Override
-    public int addOneLocation(String country, String city) {
+    public void addOneLocation(String country, String city) {
         int result = 0;
         String sql = "insert into location (country, city)" +
                 "values (?,?)";
@@ -318,11 +334,10 @@ public class DatabaseManipulation implements DataManipulation {
 
         } catch (SQLException ignored) {
         }
-        return result;
     }
 
     @Override
-    public int addOneSalesman(String first_name, String surname, String salesman_number, String gender, int age, String mobile_phone) {
+    public void addOneSalesman(String first_name, String surname, String salesman_number, String gender, int age, String mobile_phone) {
         int result = 0;
         String sql = "insert into salesman(first_name, surname, salesman_number, gender, age, mobile_phone)" +
                 "values (?,?,?,?,?,?)";
@@ -340,11 +355,10 @@ public class DatabaseManipulation implements DataManipulation {
 
         } catch (SQLException ignored) {
         }
-        return result;
     }
 
     @Override
-    public int addOneEnterprises(String enterprise_name, String industry, int location_id, String supply_center) {
+    public void addOneEnterprises(String enterprise_name, String industry, int location_id, String supply_center) {
         int result = 0;
         String sql = "insert into enterprise (enterprise_name, industry,location_id, supply_center)" +
                 "values (?,?,?,?)";
@@ -359,11 +373,10 @@ public class DatabaseManipulation implements DataManipulation {
 
         } catch (SQLException ignored) {
         }
-        return result;
     }
 
     @Override
-    public int addOneContract(String contract_number, Date contract_date, String director, int enterprise_id) {
+    public void addOneContract(String contract_number, Date contract_date, String director, int enterprise_id) {
         int result = 0;
         String sql = "insert into contract (contract_number, contract_date, director, enterprise_id)" +
                 "values (?,?,?,?)";
@@ -378,13 +391,12 @@ public class DatabaseManipulation implements DataManipulation {
 
         } catch (SQLException ignored) {
         }
-        return result;
     }
 
     @Override
-    public int addOneOrder(int quantity, Date estimated_delivery_date, Date lodgement_date, int model_id, int salesman_id, int contract_id) {
+    public void addOneOrder(int quantity, Date estimated_delivery_date, Date lodgement_date, int model_id, int salesman_id, int contract_id) {
         int result = 0;
-        String sql = "insert into order_ (quantity, estimated_delivery_date, lodgement_date,model_id, sales_id, contract_id)" +
+        String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date,model_id, sales_id, contract_id)" +
                 "values (?,?,?,?,?,?)";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
@@ -399,13 +411,12 @@ public class DatabaseManipulation implements DataManipulation {
 
         } catch (SQLException ignored) {
         }
-        return result;
     }
 
     @Override
-    public int addOneOrder(int quantity, Date estimated_delivery_date, int model_id, int salesman_id, int contract_id) {
+    public void addOneOrder(int quantity, Date estimated_delivery_date, int model_id, int salesman_id, int contract_id) {
         int result = 0;
-        String sql = "insert into order_ (quantity, estimated_delivery_date, lodgement_date,model_id, sales_id, contract_id)" +
+        String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date,model_id, sales_id, contract_id)" +
                 "values (?,?,?,?,?)";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
@@ -419,7 +430,6 @@ public class DatabaseManipulation implements DataManipulation {
 
         } catch (SQLException ignored) {
         }
-        return result;
     }
 
 
