@@ -5,7 +5,6 @@ import dataimport.entity.*;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class DatabaseManipulation implements DataManipulation {
     private Connection con = null;
@@ -51,6 +50,7 @@ public class DatabaseManipulation implements DataManipulation {
         }
     }
 
+    //region Import Data Using Entity Class
     @Override
     public void addRawOneProduct(Product product) {
         String sql = "insert into product (product_code, product_name)" +
@@ -172,11 +172,12 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addRawOneOrders(Orders orders) {
+    public void addRawOneOrders(Orders orders) throws ParseException {
         String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date, product_model, sales_id, contract_number)" +
                 "values (?, ?, ?, ?, ?, ?);";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date deadline = new java.util.Date(2022, Calendar.APRIL, 15);
+//        java.util.Date deadline = new java.util.Date(2022, Calendar.APRIL, 15);
+        java.util.Date deadline = sdf.parse("2022-04-15");
         java.util.Date date;
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
@@ -271,6 +272,6 @@ public class DatabaseManipulation implements DataManipulation {
             e.printStackTrace();
         }
     }
-
+    //endregion
 
 }

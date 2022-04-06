@@ -2,6 +2,8 @@ package dataimport;
 
 import dataimport.entity.*;
 
+import java.text.ParseException;
+
 public interface DataManipulation {
     void openDatasource();
     void closeDatasource();
@@ -11,7 +13,7 @@ public interface DataManipulation {
     void addRawOneSalesman(Salesman salesman);
     void addRawOneEnterprise(Enterprise enterprise);
     void addRawOneContract(Contract contract);
-    void addRawOneOrders(Orders orders);
+    void addRawOneOrders(Orders orders) throws ParseException;
     void cleanRawData();
     int getLocationID(String country, String city);
     void buildForeignKey();
