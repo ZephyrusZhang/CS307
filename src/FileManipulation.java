@@ -1,5 +1,3 @@
-import entity.*;
-
 import java.sql.Date;
 
 public class FileManipulation implements DataManipulation {
@@ -19,31 +17,36 @@ public class FileManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneProductByEntity(Product product) {
+    public void importOneProduct(String product_code, String product_name) {
     }
 
     @Override
-    public void addOneModelByEntity(Model model) {
+    public void importOneModel(String product_model, int unit_price, int product_id) {
     }
 
     @Override
-    public void addOneLocationByEntity(Location location) {
+    public void importOneLocation(String country, String city) {
     }
 
     @Override
-    public void addOneSalesmanByEntity(Salesman salesman) {
+    public void importOneSalesman(String name, String salesman_number, String gender, int age, String mobile_phone, int supply_center_id) {
     }
 
     @Override
-    public void addOneEnterpriseByEntity(Enterprise enterprise) {
+    public void importOneSupplyCenter(String supply_center_name, String director_name) {
+
     }
 
     @Override
-    public void addOneContractByEntity(Contract contract) {
+    public void importOneEnterprise(String enterprise_name, String industry, int location_id, int supply_center_id) {
     }
 
     @Override
-    public void addOneOrdersByEntity(Orders orders) {
+    public void importOneContract(String contract_number, String contract_date, int enterprise_id) {
+    }
+
+    @Override
+    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id) {
     }
 
     @Override

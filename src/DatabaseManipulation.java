@@ -1,5 +1,3 @@
-import entity.*;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -68,154 +66,147 @@ public class DatabaseManipulation implements DataManipulation {
 
     //region Import Data Using Entity Class
     @Override
-    public void addOneProductByEntity(Product product) {
+    public void importOneProduct(String product_code, String product_name) {
         String sql = "insert into product (product_code, product_name)" +
                 "values (?, ?);";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, product.product_code);
-            preparedStatement.setString(2, product.product_name);
+            preparedStatement.setString(1, product_code);
+            preparedStatement.setString(2, product_name);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
-                    " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void addOneModelByEntity(Model model) {
-        String sql = "insert into model (product_model, unit_price)" +
-                "values (?, ?);";
+    public void importOneModel(String product_model, int unit_price, int product_id) {
+        String sql = "insert into model (product_model, unit_price, product_id) " +
+                "values (?, ?, ?);";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, model.product_model);
-            preparedStatement.setInt(2, model.unit_price);
+            preparedStatement.setString(1, product_model);
+            preparedStatement.setInt(2, unit_price);
+            preparedStatement.setInt(3, product_id);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
-                    " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void addOneLocationByEntity(Location location) {
+    public void importOneLocation(String country, String city) {
         String sql = "insert into location (country, city)" +
                 "values (?, ?);";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, location.country);
-            preparedStatement.setString(2, location.city);
+            preparedStatement.setString(1, country);
+            if (city.equals("NULL")) {
+                preparedStatement.setNull(2, Types.VARCHAR);
+            } else {
+                preparedStatement.setString(2, city);
+            }
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
-                    " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void addOneSalesmanByEntity(Salesman salesman) {
-        String sql = "insert into salesman (name, salesman_number, gender, age, mobile_phone)" +
-                "values ( ?, ?, ?, ?, ?);";
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, salesman.name);
-            preparedStatement.setString(2, salesman.sales_number);
-            preparedStatement.setString(3, salesman.gender);
-            preparedStatement.setInt(4, salesman.age);
-            preparedStatement.setString(5, salesman.mobile_phone);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
-                    " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void addOneEnterpriseByEntity(Enterprise enterprise) {
-        String sql = "insert into enterprise (enterprise_name, industry, location_id, supply_center)" +
-                "values (?, ?, ?, ?);";
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, enterprise.enterprise_name);
-            preparedStatement.setString(2, enterprise.industry);
-            preparedStatement.setInt(3, enterprise.location_id);
-            preparedStatement.setString(4, enterprise.supply_center);
-            preparedStatement.executeUpdate();
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
-                    " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void addOneContractByEntity(Contract contract) {
-        String sql = "insert into contract (contract_number, contract_date, director, enterprise_id) " +
-                "values (?, ?, ?, ?);";
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, contract.contract_number);
-            preparedStatement.setDate(2, Date.valueOf(contract.contract_date));
-            preparedStatement.setString(3, contract.name);
-            preparedStatement.setInt(4, -1);
-            preparedStatement.executeUpdate();
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
-                    " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void addOneOrdersByEntity(Orders orders) throws ParseException {
-        String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date, model_id, sales_id, contract_id) " +
+    public void importOneSalesman(String name, String salesman_number, String gender, int age, String mobile_phone, int supply_center_id) {
+        String sql = "insert into salesman (name, salesman_number, gender, age, mobile_phone, supply_center_id) " +
                 "values (?, ?, ?, ?, ?, ?);";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, salesman_number);
+            preparedStatement.setString(3, gender);
+            preparedStatement.setInt(4, age);
+            preparedStatement.setString(5, mobile_phone);
+            preparedStatement.setInt(6, supply_center_id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void importOneSupplyCenter(String supply_center_name, String director_name) {
+        String sql = "insert into supply_center (supply_center_name, director_name) " +
+                "values (?, ?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, supply_center_name);
+            preparedStatement.setString(2, director_name);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void importOneEnterprise(String enterprise_name, String industry, int location_id, int supply_center_id) {
+        String sql = "insert into enterprise (enterprise_name, industry, location_id, supply_center_id) " +
+                "values (?, ?, ?, ?);";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, enterprise_name);
+            preparedStatement.setString(2, industry);
+            preparedStatement.setInt(3, location_id);
+            preparedStatement.setInt(4, supply_center_id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void importOneContract(String contract_number, String contract_date, int enterprise_id) {
+        String sql = "insert into contract (contract_number, contract_date, enterprise_id) " +
+                "values (?, ?, ?)";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, contract_number);
+            preparedStatement.setDate(2, Date.valueOf(contract_date));
+            preparedStatement.setInt(3, enterprise_id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id) throws ParseException {
+        String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date, model_id, contract_id) " +
+                "values (?, ?, ?, ?, ?);";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date deadline = sdf.parse("2022-04-15");
         java.util.Date date;
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setInt(1, orders.quantity);
-            preparedStatement.setDate(2, Date.valueOf(orders.estimated_delivery_date));
-            if (orders.lodgement_date.equals("")) {
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setDate(2, Date.valueOf(estimated_delivery_date));
+            if (lodgement_date.equals("")) {
                 preparedStatement.setNull(3, Types.DATE);
             } else {
-                date = sdf.parse(orders.lodgement_date);
+                date = sdf.parse(lodgement_date);
                 if (date.after(deadline)) {
                     preparedStatement.setNull(3, Types.DATE);
                 } else {
-                    preparedStatement.setDate(3, Date.valueOf(orders.lodgement_date));
+                    preparedStatement.setDate(3, Date.valueOf(lodgement_date));
                 }
             }
-            preparedStatement.setInt(4, -1);
-            preparedStatement.setInt(5, -1);
-            preparedStatement.setInt(6, -1);
+            preparedStatement.setInt(4, model_id);
+            preparedStatement.setInt(5, contract_id);
 
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
-                    " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
-                e.printStackTrace();
-            }
-        } catch (ParseException e) {
+        } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
     }

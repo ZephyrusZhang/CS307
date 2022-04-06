@@ -2,7 +2,6 @@ package entity;
 
 public class Salesman {
     public String name;
-    public String surname;
     public String sales_number;
     public String gender;
     public int age;
