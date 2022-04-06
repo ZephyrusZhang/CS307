@@ -12,35 +12,35 @@ public class FileManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneProduct(Product product) {
+    public void addRawOneProduct(Product product) {
     }
 
     @Override
-    public void addOneModel(Model model) {
+    public void addRawOneModel(Model model) {
     }
 
     @Override
-    public void addOneLocation(Location location) {
+    public void addRawOneLocation(Location location) {
     }
 
     @Override
-    public void addOneSalesman(Salesman salesman) {
+    public void addRawOneSalesman(Salesman salesman) {
     }
 
     @Override
-    public void addOneEnterprise(Enterprise enterprise) {
+    public void addRawOneEnterprise(Enterprise enterprise) {
     }
 
     @Override
-    public void addOneContract(Contract contract) {
+    public void addRawOneContract(Contract contract) {
     }
 
     @Override
-    public void addOneOrders(Orders orders) {
+    public void addRawOneOrders(Orders orders) {
     }
 
     @Override
-    public void cleanData() {
+    public void cleanRawData() {
 
     }
 

@@ -50,7 +50,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneProduct(Product product) {
+    public void addRawOneProduct(Product product) {
         String sql = "insert into product (product_code, product_name)" +
                 "values (?, ?);";
         try {
@@ -68,7 +68,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneModel(Model model) {
+    public void addRawOneModel(Model model) {
         String sql = "insert into model (product_model, unit_price, product_code)" +
                 "values (?, ?, ?);";
         try {
@@ -87,7 +87,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneLocation(Location location) {
+    public void addRawOneLocation(Location location) {
         String sql = "insert into location (country, city)" +
                 "values (?, ?);";
         try {
@@ -105,7 +105,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneSalesman(Salesman salesman) {
+    public void addRawOneSalesman(Salesman salesman) {
         String sql = "insert into salesman (first_name, surname, salesman_number, gender, age, mobile_phone)" +
                 "values (?, ?, ?, ?, ?, ?);";
         try {
@@ -127,7 +127,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneEnterprise(Enterprise enterprise) {
+    public void addRawOneEnterprise(Enterprise enterprise) {
         String sql = "insert into enterprise (enterprise_name, industry, location_id, supply_center)" +
                 "values (?, ?, ?, ?);";
         try {
@@ -148,7 +148,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneContract(Contract contract) {
+    public void addRawOneContract(Contract contract) {
         String sql = "insert into contract (contract_number, contract_date, director_firstname, director_surname, client_enterprise)" +
                 "values (?, ?, ?, ?, ?);";
         try {
@@ -170,7 +170,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void addOneOrders(Orders orders) {
+    public void addRawOneOrders(Orders orders) {
         String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date, product_model, sales_id, contract_number)" +
                 "values (?, ?, ?, ?, ?, ?);";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -207,7 +207,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void cleanData() {
+    public void cleanRawData() {
         String sql = "update location set city = null where city = 'NULL'";
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);

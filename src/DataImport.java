@@ -6,8 +6,12 @@ import java.io.IOException;
 
 public class DataImport {
     public static void main(String[] args) {
+        importDataByEntity(args[0]);
+    }
+
+    public static void importDataByEntity(String way) {
         try {
-            DataManipulation dm = new DataFactory().createDataManipulation(args[0]);
+            DataManipulation dm = new DataFactory().createDataManipulation(way);
             dm.openDatasource();
 
             dm.dropAllData();
@@ -31,15 +35,15 @@ public class DataImport {
                 data = line.split(",");
 
                 product = new Product(data[6], data[8]);
-                dm.addOneProduct(product);
+                dm.addRawOneProduct(product);
 
                 model = new Model(data[8], Integer.parseInt(data[9]), data[6]);
-                dm.addOneModel(model);
+                dm.addRawOneModel(model);
 
                 String[] countries = data[3].split("/");
                 for (String country : countries) {
                     location = new Location(country, data[4]);
-                    dm.addOneLocation(location);
+                    dm.addRawOneLocation(location);
                 }
 
                 salesmanName = data[15].split(" ");
@@ -51,16 +55,16 @@ public class DataImport {
                     salesman = new Salesman(salesmanName[0], salesmanName[1], data[16], data[17], Integer.parseInt(data[18]), data[19]);
                     contract = new Contract(data[0], data[11], directorName[0], directorName[1], data[1]);
                 }
-                dm.addOneSalesman(salesman);
-                dm.addOneContract(contract);
+                dm.addRawOneSalesman(salesman);
+                dm.addRawOneContract(contract);
 
                 enterprise = new Enterprise(data[1], data[5], -1, data[2]);
-                dm.addOneEnterprise(enterprise);
+                dm.addRawOneEnterprise(enterprise);
 
                 orders = new Orders(Integer.parseInt(data[10]), data[12], data[13], data[8], -1, data[0]);
-                dm.addOneOrders(orders);
+                dm.addRawOneOrders(orders);
             }
-            dm.cleanData();
+            dm.cleanRawData();
             long endTime = System.currentTimeMillis();
             long timeUsed = (endTime - startTime) / 1000;
             dm.closeDatasource();
