@@ -5,11 +5,9 @@ import dataimport.entity.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 
 public class DataImport {
-    public static void main(String[] args) {
-        importDataByEntity(args[0]);
-    }
 
     public static void importDataByEntity(String way) {
         try {
@@ -71,7 +69,7 @@ public class DataImport {
             long timeUsed = (endTime - startTime) / 1000;
             dm.closeDatasource();
             System.out.printf("Data import procedure cost %d s\n", timeUsed);
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }

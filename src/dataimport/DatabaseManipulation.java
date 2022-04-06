@@ -176,7 +176,6 @@ public class DatabaseManipulation implements DataManipulation {
         String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date, product_model, sales_id, contract_number)" +
                 "values (?, ?, ?, ?, ?, ?);";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        java.util.Date deadline = new java.util.Date(2022, Calendar.APRIL, 15);
         java.util.Date deadline = sdf.parse("2022-04-15");
         java.util.Date date;
         try {
@@ -204,8 +203,7 @@ public class DatabaseManipulation implements DataManipulation {
                 e.printStackTrace();
             }
         } catch (ParseException e) {
-            System.out.println(orders.lodgement_date);
-            System.exit(1);
+            e.printStackTrace();
         }
     }
 
