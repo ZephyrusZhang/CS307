@@ -1,6 +1,9 @@
 public class Client {
     public static void main(String[] args) {
-        DataImport.importDataByEntity(args[0]);
+        DataManipulation dm = new DataFactory().createDataManipulation(args[0]);
+        dm.openDatasource();
+        DataImport.importDataByEntity(dm);
+        dm.closeDatasource();
     }
 }
 

@@ -7,11 +7,8 @@ import java.text.ParseException;
 
 public class DataImport {
 
-    public static void importDataByEntity(String way) {
+    public static void importDataByEntity(DataManipulation dm) {
         try {
-            DataManipulation dm = new DataFactory().createDataManipulation(way);
-            dm.openDatasource();
-
 //            dm.dropAllData();
 
             BufferedReader reader = new BufferedReader(new FileReader("contract_info.csv"));
@@ -65,7 +62,6 @@ public class DataImport {
             dm.cleanRawData();
             long endTime = System.currentTimeMillis();
             long timeUsed = (endTime - startTime) / 1000;
-            dm.closeDatasource();
             System.out.printf("Data import procedure cost %d s\n", timeUsed);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
