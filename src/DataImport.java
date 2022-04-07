@@ -34,13 +34,11 @@ public class DataImport {
 
                 //region Product
                 if (!product.containsKey(tokens[6])) {
+                    if (!tokens[6].matches("[a-zA-Z0-9]{7}")) {
+                        throw new IllegalArgumentException("Invalid product code");
+                    }
                     product.put(tokens[6], product_id);
                     product_id++;
-                    if (tokens[6].length() > 7) {
-                        throw new IllegalArgumentException("Product name is too long");
-                    } else if (tokens[7].length() > 256) {
-                        throw new IllegalArgumentException("Product model is too long");
-                    }
                     dm.importOneProduct(tokens[6], tokens[7]);
                 }
                 //endregion
@@ -71,6 +69,18 @@ public class DataImport {
 
                 //region Salesman
                 if (!salesman.containsKey(tokens[16])) {
+                    if (!tokens[16].matches("[0-9]{8}")) {
+                        throw new IllegalArgumentException("Invalid salesman number");
+                    }
+                    if (!tokens[17].matches("Male|Female")) {
+                        throw new IllegalArgumentException("Invalid gender");
+                    }
+                    if (Integer.parseInt(tokens[18]) < 0) {
+                        throw new IllegalArgumentException("Invalid age");
+                    }
+                    if (!tokens[19].matches("[0-9]{11}")) {
+                        throw new IllegalArgumentException("Invalid mobile phone number");
+                    }
                     salesman.put(tokens[16], salesman_id);
                     salesman_id++;
                     dm.importOneSalesman(tokens[15], tokens[16], tokens[17], Integer.parseInt(tokens[18]), tokens[19], supply_center.get(tokens[2]));
@@ -87,6 +97,9 @@ public class DataImport {
 
                 //region Contract
                 if (!contract.containsKey(tokens[0])) {
+                    if (!tokens[0].matches("CSE[0-9]{7}")) {
+                        throw new IllegalArgumentException("Invalid contract number");
+                    }
                     contract.put(tokens[0], contract_id);
                     contract_id++;
                     dm.importOneContract(tokens[0], tokens[11], enterprise.get(aggregateString(tokens[1], tokens[5], tokens[3], tokens[4], tokens[2])));

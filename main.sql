@@ -37,7 +37,7 @@ create table salesman
     salesman_number  varchar(8)  not null,
     gender           varchar(6)  not null,
     age              int         not null,
-    mobile_phone     varchar(20) not null,
+    mobile_phone     varchar(11) not null,
     supply_center_id integer     not null,
     constraint salesman_uk unique (salesman_number)
 --     constraint salesman_supply_center_fk foreign key (supply_center_id) references supply_center(id)
