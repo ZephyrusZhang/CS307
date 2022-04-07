@@ -57,8 +57,9 @@ public class DatabaseManipulation implements DataManipulation {
             while ((line = reader.readLine()) != null) {
                 sql.append(line);
             }
-            Statement statement = con.createStatement();
-            statement.executeUpdate(sql.toString());
+            PreparedStatement preparedStatement = con.prepareStatement(String.valueOf(sql));
+            preparedStatement.executeUpdate();
+            con.commit();
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
@@ -223,23 +224,7 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public int getLocationID(String country, String city) {
-        int id = 0;
-        String sql = "select * from location " +
-                "where country = ? and city = ?;";
-        try {
-            PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, country);
-            preparedStatement.setString(2, city);
-            id = preparedStatement.executeQuery().findColumn("id");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return id;
-    }
-
-    @Override
-    public void buildForeignKey() {
+    public void alterForeignKey() {
 
     }
 

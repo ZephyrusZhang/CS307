@@ -55,12 +55,7 @@ public class FileManipulation implements DataManipulation {
     }
 
     @Override
-    public int getLocationID(String country, String city) {
-        return 0;
-    }
-
-    @Override
-    public void buildForeignKey() {
+    public void alterForeignKey() {
 
     }
 

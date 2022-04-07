@@ -14,8 +14,7 @@ public interface DataManipulation {
     void importOneContract(String contract_number, String contract_date, int enterprise_id);
     void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id) throws ParseException;
     void cleanData();
-    int getLocationID(String country, String city);
-    void buildForeignKey();
+    void alterForeignKey();
     void truncateAllTables();
     //TODO Hashmap by argument
     void addOneProduct(String product_code, String product_name);
