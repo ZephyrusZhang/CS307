@@ -183,9 +183,9 @@ public class DatabaseManipulation implements DataManipulation {
     }
 
     @Override
-    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id) throws ParseException {
-        String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date, model_id, contract_id) " +
-                "values (?, ?, ?, ?, ?);";
+    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id, int salesman_id) throws ParseException {
+        String sql = "insert into orders (quantity, estimated_delivery_date, lodgement_date, model_id, contract_id, salesman_id) " +
+                "values (?, ?, ?, ?, ?, ?);";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date deadline = sdf.parse("2022-04-15");
         java.util.Date date;
@@ -205,6 +205,7 @@ public class DatabaseManipulation implements DataManipulation {
             }
             preparedStatement.setInt(4, model_id);
             preparedStatement.setInt(5, contract_id);
+            preparedStatement.setInt(6, salesman_id);
 
             preparedStatement.executeUpdate();
         } catch (SQLException | ParseException e) {
@@ -225,7 +226,20 @@ public class DatabaseManipulation implements DataManipulation {
 
     @Override
     public void alterForeignKey() {
-
+        String sql = "alter table model add constraint model_product_fk foreign key (product_id) references product (id);" + "\n" +
+                "alter table salesman add constraint salesman_supply_center_fk foreign key (supply_center_id) references supply_center (id);" + "\n" +
+                "alter table enterprise add constraint location_enterprise foreign key (location_id) references location (id);" + "\n" +
+                "alter table enterprise add constraint enterprise_supply_center_fk foreign key (supply_center_id) references supply_center (id);" + "\n" +
+                "alter table contract add constraint enterprise_contract foreign key (enterprise_id) references enterprise (id);" + "\n" +
+                "alter table orders add constraint contract_order foreign key (contract_id) references contract (id);" + "\n" +
+                "alter table orders add constraint model_order foreign key (model_id) references model (id);" + "\n" +
+                "alter table orders add constraint orders_salesman_id foreign key (salesman_id) references salesman (id);";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

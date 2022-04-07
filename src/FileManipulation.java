@@ -46,7 +46,7 @@ public class FileManipulation implements DataManipulation {
     }
 
     @Override
-    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id) {
+    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id, int salesman_id) {
     }
 
     @Override

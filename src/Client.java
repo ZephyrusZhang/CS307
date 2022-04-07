@@ -6,6 +6,7 @@ public class Client {
 //        dm.executeDDL();
 //        dm.truncateAllTables();
         DataImport.importDataByEntity(dm);
+        dm.alterForeignKey();
         dm.closeDatasource();
     }
 }

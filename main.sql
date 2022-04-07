@@ -39,7 +39,7 @@ create table salesman
     age              int         not null,
     mobile_phone     varchar(20) not null,
     supply_center_id integer     not null,
-    constraint salesman_uk unique (name, salesman_number, gender, age, mobile_phone)
+    constraint salesman_uk unique (salesman_number)
 --     constraint salesman_supply_center_fk foreign key (supply_center_id) references supply_center(id)
 );
 
@@ -73,9 +73,9 @@ create table orders
     lodgement_date          date,
     model_id                integer not null,
     contract_id             integer not null,
-    constraint orders_uk unique (quantity, estimated_delivery_date, lodgement_date, model_id, contract_id)
+    salesman_id             integer not null,
+    constraint orders_uk unique (quantity, estimated_delivery_date, lodgement_date, model_id, contract_id, salesman_id)
 --     constraint contract_order foreign key (contract_id) references contract (id),
 --     constraint model_order foreign key (model_id) references model (id)
+--     constraint orders_salesman_id foreign key (salesman_id) references salesman (id)
 );
-
--- truncate table contract, enterprise, location, model, orders, product, salesman, supply_center;

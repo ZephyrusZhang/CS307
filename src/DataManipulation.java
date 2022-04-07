@@ -12,7 +12,7 @@ public interface DataManipulation {
     void importOneSupplyCenter(String supply_center_name, String director_name);
     void importOneEnterprise(String enterprise_name, String industry, int location_id, int supply_center_id);
     void importOneContract(String contract_number, String contract_date, int enterprise_id);
-    void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id) throws ParseException;
+    void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id, int salesman_id) throws ParseException;
     void cleanData();
     void alterForeignKey();
     void truncateAllTables();

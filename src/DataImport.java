@@ -70,8 +70,8 @@ public class DataImport {
                 //endregion
 
                 //region Salesman
-                if (!salesman.containsKey(tokens[15] + "," + tokens[16] + "," + tokens[17] + "," + tokens[18] + "," + tokens[19])) {
-                    salesman.put(tokens[15] + "," + tokens[16] + "," + tokens[17] + "," + tokens[18] + "," + tokens[19], salesman_id);
+                if (!salesman.containsKey(tokens[16])) {
+                    salesman.put(tokens[16], salesman_id);
                     salesman_id++;
                     dm.importOneSalesman(tokens[15], tokens[16], tokens[17], Integer.parseInt(tokens[18]), tokens[19], supply_center.get(tokens[2]));
                 }
@@ -94,10 +94,10 @@ public class DataImport {
                 //endregion
 
                 //region Orders
-                if (!orders.containsKey(aggregateString(tokens[10], tokens[12], tokens[13], tokens[8], tokens[0]))) {
-                    orders.put(aggregateString(tokens[10], tokens[12], tokens[13], tokens[8], tokens[0]), orders_id);
+                if (!orders.containsKey(aggregateString(tokens[10], tokens[12], tokens[13], tokens[8], tokens[0], tokens[16]))) {
+                    orders.put(aggregateString(tokens[10], tokens[12], tokens[13], tokens[8], tokens[0], tokens[16]), orders_id);
                     orders_id++;
-                    dm.importOneOrders(Integer.parseInt(tokens[10]), tokens[12], tokens[13], model.get(tokens[8]), contract.get(tokens[0]));
+                    dm.importOneOrders(Integer.parseInt(tokens[10]), tokens[12], tokens[13], model.get(tokens[8]), contract.get(tokens[0]), salesman.get(tokens[16]));
                 }
                 //endregion
             }
