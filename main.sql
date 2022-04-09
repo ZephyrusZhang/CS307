@@ -27,7 +27,7 @@ create table supply_center
     id                 serial primary key,
     supply_center_name varchar(80) not null,
     director_name      varchar(80) not null,
-    constraint supply_center_uk unique (supply_center_name)
+    constraint supply_center_uk unique (supply_center_name, director_name)
 );
 
 create table salesman
@@ -53,7 +53,6 @@ create table enterprise
     constraint enterprise_uk unique (enterprise_name, industry, location_id, supply_center_id)
 --     constraint location_enterprise foreign key (location_id) references location (id),
 --     constraint enterprise_supply_center_fk foreign key (supply_center_id) references supply_center (id)
-
 );
 
 create table contract

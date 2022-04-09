@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 
+import static assets.Supporting.*;
+
 public class DataImport {
 
-    public static void importDataByEntity(DataManipulation dm) {
+    public static void importDataUsingHashMap(DataManipulation dm) {
         String[] tokens;
         int product_id = 1, model_id = 1, location_id = 1, salesman_id = 1, supply_center_id = 1, enterprise_id = 1, contract_id = 1, orders_id = 1;
         HashMap<String, Integer> product = new HashMap<>();
@@ -23,14 +25,8 @@ public class DataImport {
             String line;
             reader.readLine();
             long startTime = System.currentTimeMillis();
-
             while ((line = reader.readLine()) != null) {
                 tokens = line.split(",");
-                //tokens[0]->contract_number;   tokens[1]->enterprise_name; tokens[2]->supply_center;   tokens[3]->country;
-                //tokens[4]->city               tokens[5]->industry;        tokens[6]->product_code;    tokens[7]->product_name;
-                //tokens[8]->product_model;     tokens[9]->unit_price;      tokens[10]->quantity;       tokens[11]->contract_date;
-                //tokens[12]->delivery_date;    tokens[13]->lodgement_date; tokens[14]->director_name;  tokens[15]->salesman_name;
-                //tokens[16]->salesman_number;  tokens[17]->gender;         tokens[18]->age;            tokens[19]->mobile_phone;
 
                 //region Product
                 if (!product.containsKey(tokens[6])) {
@@ -114,21 +110,11 @@ public class DataImport {
                 }
                 //endregion
             }
-
             long endTime = System.currentTimeMillis();
             long sec = (endTime - startTime) / 1000;
             System.out.printf("Data import costs %d s\n", sec);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    public static String aggregateString(String... args) {
-        StringBuilder res = new StringBuilder();
-        for (int i = 0; i < args.length - 1; i++) {
-            res.append(args[i]).append(",");
-        }
-        res.append(args[args.length - 1]);
-        return String.valueOf(res);
     }
 }
