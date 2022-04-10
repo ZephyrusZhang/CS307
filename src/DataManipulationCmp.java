@@ -1,5 +1,6 @@
 public interface DataManipulationCmp {
     void insertSupplyCenterTest();
-    void deleteSupplyCenterTest();
+    void deleteModelTest();
     void selectSalesmanTest();
+    void updateSalesmanTest();
 }

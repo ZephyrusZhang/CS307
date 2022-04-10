@@ -57,7 +57,7 @@ public class DatabaseManipulationCmp implements DataManipulationCmp {
     }
 
     @Override
-    public void deleteSupplyCenterTest() {
+    public void deleteModelTest() {
         try (BufferedReader reader = new BufferedReader(new FileReader("product_model.txt"))) {
             String sql;
             String line;
@@ -143,12 +143,17 @@ public class DatabaseManipulationCmp implements DataManipulationCmp {
         }
     }
 
+    @Override
+    public void updateSalesmanTest() {
+
+    }
+
     public void insertDataIntoSalesman() {
         PreparedStatement preparedStatement;
         String sql;
         Random random = new Random();
         int age;
-        for (int i = 0; i < 4000000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             sql = "insert into salesman (name, salesman_number, gender, age, mobile_phone, supply_center_id) " +
                     "values (?, ?, ?, ?, ?, ?);";
             try {
