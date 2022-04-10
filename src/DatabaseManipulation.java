@@ -21,7 +21,7 @@ public class DatabaseManipulation implements DataManipulation {
 
         try {
             String host = "localhost";
-            String dbname = "postgres";
+            String dbname = "duplicate";
             String port = "5432";
             String user = "postgres";
             String pwd = "2996362441";
