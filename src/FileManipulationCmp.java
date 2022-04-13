@@ -5,6 +5,8 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+import static assets.Supporting.*;
+
 public class FileManipulationCmp implements DataManipulationCmp {
     private static Connection con;
     private ResultSet resultSet;
@@ -76,13 +78,11 @@ public class FileManipulationCmp implements DataManipulationCmp {
         try (BufferedReader reader = new BufferedReader(new FileReader("file-database/salesman.csv"))) {
             String line;
             String[] tokens;
-            int age;
             reader.readLine();
             while ((line = reader.readLine()) != null) {
                 tokens = line.split(",");
-                age = Integer.parseInt(tokens[4]);
-                if (age == 0) {
-                    tokens[4] = String.valueOf(age + 10);
+                if (tokens[1].contains("Mr. ")) {
+                    tokens[1] = tokens[1].replace("Mr. ", "");
                 }
                 cache.add(tokens[0] + "," + tokens[1] + "," + tokens[2] + "," + tokens[3] + "," + tokens[4] + "," + tokens[5] + "," + tokens[6]);
             }
@@ -100,6 +100,21 @@ public class FileManipulationCmp implements DataManipulationCmp {
         }
         long endTime = System.currentTimeMillis();
         System.out.println((endTime - startTime) + "ms");
+    }
+
+    public void initSalesmanSource() {
+        Random random = new Random();
+        int age;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("resources/salesman.txt"))) {
+            for (int i = 0; i < 1000000; i++) {
+                age = random.nextInt(20);
+                writer.write(faker.name().fullName() + "," + faker.number().randomNumber(8, true) + "," +
+                        ((age % 2 == 0) ? "Male" : "Female") + "," + age + "," + faker.phoneNumber().subscriberNumber(11) + "," +
+                        (random.nextInt(6) + 1) + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initModel() {

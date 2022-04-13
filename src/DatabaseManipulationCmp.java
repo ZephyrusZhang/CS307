@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Random;
 
 public class DatabaseManipulationCmp implements DataManipulationCmp {
     private Connection con = null;
@@ -151,28 +150,25 @@ public class DatabaseManipulationCmp implements DataManipulationCmp {
     public void insertDataIntoSalesman() {
         PreparedStatement preparedStatement;
         String sql;
-        Random random = new Random();
-        int age;
-        for (int i = 0; i < 1000000; i++) {
-            sql = "insert into salesman (name, salesman_number, gender, age, mobile_phone, supply_center_id) " +
-                    "values (?, ?, ?, ?, ?, ?);";
-            try {
-                age = random.nextInt(20);
-                preparedStatement = con.prepareStatement(sql);
-                preparedStatement.setString(1, faker.name().fullName());
-                preparedStatement.setString(2, String.valueOf(faker.number().randomNumber(8, true)));
-                preparedStatement.setString(3, (age % 2 == 0) ? "Male" : "Female");
-                preparedStatement.setInt(4, age);
-                preparedStatement.setString(5, faker.phoneNumber().subscriberNumber(11));
-                preparedStatement.setInt(6, random.nextInt(6) + 1);
+        String line;
+        String[] tokens;
+        try (BufferedReader reader = new BufferedReader(new FileReader("resources/salesman.txt"))) {
+            while ((line = reader.readLine()) != null) {
+                tokens = line.split(",");
 
+                sql = "insert into salesman (name, salesman_number, gender, age, mobile_phone, supply_center_id) " +
+                        "values (?, ?, ?, ?, ?, ?) on conflict do nothing;";
+                preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setString(1, tokens[0]);
+                preparedStatement.setString(2, tokens[1]);
+                preparedStatement.setString(3, tokens[2]);
+                preparedStatement.setInt(4, Integer.parseInt(tokens[3]));
+                preparedStatement.setString(5, tokens[4]);
+                preparedStatement.setInt(6, Integer.parseInt(tokens[5]));
                 preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
-                        " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
-                    e.printStackTrace();
-                }
             }
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
         }
     }
 
