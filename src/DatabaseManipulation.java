@@ -1,9 +1,13 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DatabaseManipulation implements DataManipulation {
     private Connection con = null;
@@ -50,7 +54,7 @@ public class DatabaseManipulation implements DataManipulation {
 
     @Override
     public void executeDDL() {
-        StringBuilder sql = new StringBuilder("");
+        StringBuilder sql = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader("main.sql"));
             String line;
@@ -275,5 +279,69 @@ public class DatabaseManipulation implements DataManipulation {
         }
     }
     //endregion
+
+    private static final ExecutorService threadPool = Executors.newFixedThreadPool(50);
+
+    public void parallelImportSalesmanData() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("resources/salesman.txt"));
+            CountDownLatch latch = new CountDownLatch(100);
+            long startTime = System.currentTimeMillis();
+
+            for (int i = 0; i < 100; i++) {
+                threadPool.execute(() -> {
+                    try {
+                        executeBatchImportSalesman(reader);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        latch.countDown();
+                    }
+                });
+            }
+            latch.await();
+            long endTime = System.currentTimeMillis();
+            System.out.println((endTime - startTime) + "ms");
+        } catch (FileNotFoundException | InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            threadPool.shutdown();
+        }
+    }
+
+    public void executeBatchImportSalesman(BufferedReader reader) {
+        try {
+            con.setAutoCommit(false);
+            String[] tokens;
+            String line;
+            String sql = "insert into salesman (name, salesman_number, gender, age, mobile_phone, supply_center_id) " +
+                    "values (?, ?, ?, ?, ?, ?) on conflict do nothing;";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            for (int i = 0; i < 10000; i++) {
+                line = reader.readLine();
+                if (line == null) break;
+                tokens = line.split(",");
+                ps.setString(1, tokens[0]);
+                ps.setString(2, tokens[1]);
+                ps.setString(3, tokens[2]);
+                ps.setInt(4, Integer.parseInt(tokens[3]));
+                ps.setString(5, tokens[4]);
+                ps.setInt(6, Integer.parseInt(tokens[5]));
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            con.commit();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        DatabaseManipulation dm = new DatabaseManipulation();
+        dm.openDatasource();
+        dm.parallelImportSalesmanData();
+        dm.closeDatasource();
+    }
 
 }

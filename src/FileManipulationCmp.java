@@ -4,6 +4,7 @@ import io.QWriter;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 import static assets.Supporting.*;
 
@@ -13,7 +14,7 @@ public class FileManipulationCmp implements DataManipulationCmp {
 
     public static void main(String[] args) {
         FileManipulationCmp cmp = new FileManipulationCmp();
-        cmp.updateSalesmanTest();
+        cmp.initSalesmanSource();
     }
 
     @Override
@@ -54,6 +55,28 @@ public class FileManipulationCmp implements DataManipulationCmp {
     public void selectSalesmanTest() {
         QWriter out = new QWriter();
         long startTime = System.currentTimeMillis();
+//        File file = new File("file-database/salesman.csv");
+//        long fileLength = file.length();
+//        byte[] fileContent = new byte[(int) fileLength];
+//        try {
+//            FileInputStream inputStream = new FileInputStream(file);
+//            int num = inputStream.read(fileContent);
+//            System.out.println(num);
+//            inputStream.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        String wholeString = new String(fileContent);
+//        String[] tokens;
+//        String line;
+//        String[] lines = wholeString.split("\n");
+//        for (String s : lines) {
+//            line = s;
+//            tokens = line.split(",");
+//            if (tokens[5].equals("22923247653")) {
+//                out.println(line);
+//            }
+//        }
         try (BufferedReader reader = new BufferedReader(new FileReader("file-database/salesman.csv"))) {
             String[] tokens;
             String line;

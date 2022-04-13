@@ -63,36 +63,4 @@ public class FileManipulation implements DataManipulation {
     public void truncateAllTables() {
 
     }
-
-    @Override
-    public void addOneProduct(String product_code, String product_name) {
-    }
-
-    @Override
-    public void addOneModel(String product_model, int unit_price, int product_id) {
-    }
-
-    @Override
-    public void addOneLocation(String countries, String city) {
-    }
-
-    @Override
-    public void addOneSalesman(String first_name, String surname, String salesman_number, String gender, int age, String mobile_phone) {
-    }
-
-    @Override
-    public void addOneEnterprises(String enterprise_name, String industry, int location_id, String supply_center) {
-    }
-
-    @Override
-    public void addOneContract(String contract_number, Date contract_date, String director, int enterprise_id) {
-    }
-
-    @Override
-    public void addOneOrder(int quantity, Date estimated_delivery_date, Date lodgement_date, int model_id, int salesman_id, int contract_id) {
-    }
-
-    @Override
-    public void addOneOrder(int quantity, Date estimated_delivery_date, int model_id, int salesman_id, int contract_id) {
-    }
 }

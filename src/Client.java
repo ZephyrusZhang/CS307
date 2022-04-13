@@ -3,10 +3,6 @@ public class Client {
         DataManipulation dm = new DataFactory().createDataManipulation(args[0]);
         dm.openDatasource();
 
-//        dm.executeDDL();
-//        dm.truncateAllTables();
-        DataImport.importDataUsingHashMap(dm);
-        dm.alterForeignKey();
         dm.closeDatasource();
     }
 }

@@ -13,7 +13,6 @@ import java.util.Objects;
 public class DatabaseManipulationCmp implements DataManipulationCmp {
     private Connection con = null;
     private ResultSet resultSet;
-    private final Faker faker = new Faker();
 
     public static void main(String[] args) {
         DatabaseManipulationCmp cmp = new DatabaseManipulationCmp();
@@ -100,15 +99,6 @@ public class DatabaseManipulationCmp implements DataManipulationCmp {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        try {
-//            String sql = "alter table model" +
-//                    " add constraint fk foreign key (product_id) references product (id);";
-//            PreparedStatement preparedStatement = con.prepareStatement(sql);
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
@@ -153,12 +143,12 @@ public class DatabaseManipulationCmp implements DataManipulationCmp {
         String line;
         String[] tokens;
         try (BufferedReader reader = new BufferedReader(new FileReader("resources/salesman.txt"))) {
+            sql = "insert into salesman (name, salesman_number, gender, age, mobile_phone, supply_center_id) " +
+                    "values (?, ?, ?, ?, ?, ?) on conflict do nothing;";
+            preparedStatement = con.prepareStatement(sql);
+            long startTime  = System.currentTimeMillis();
             while ((line = reader.readLine()) != null) {
                 tokens = line.split(",");
-
-                sql = "insert into salesman (name, salesman_number, gender, age, mobile_phone, supply_center_id) " +
-                        "values (?, ?, ?, ?, ?, ?) on conflict do nothing;";
-                preparedStatement = con.prepareStatement(sql);
                 preparedStatement.setString(1, tokens[0]);
                 preparedStatement.setString(2, tokens[1]);
                 preparedStatement.setString(3, tokens[2]);
@@ -167,9 +157,17 @@ public class DatabaseManipulationCmp implements DataManipulationCmp {
                 preparedStatement.setInt(6, Integer.parseInt(tokens[5]));
                 preparedStatement.executeUpdate();
             }
+            long endTime = System.currentTimeMillis();
+            System.out.println((endTime - startTime) + "ms");
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void insertDataIntoSalesmanParallel() {
+        String line;
+        String[] tokens;
+
     }
 
     public void openDatasource() {
