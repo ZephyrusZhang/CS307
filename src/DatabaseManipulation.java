@@ -1,3 +1,5 @@
+import assets.EasyReader;
+
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
@@ -21,11 +23,20 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
         }
 
         try {
-            String host = "localhost";
-            String dbname = "duplicate";
-            String port = "5432";
-            String user = "postgres";
-            String pwd = "2996362441";
+            EasyReader in = new EasyReader(System.in);
+            String host = in.nextLine("host");
+            String dbname = in.nextLine("database name");
+            String port = in.nextLine("port");
+            String user = in.nextLine("user");
+            String pwd = in.nextLine("password");
+            if (host.equals(""))
+                host = "localhost";
+            if (dbname.equals(""))
+                dbname = "postgres";
+            if (port.equals(""))
+                port = "5432";
+            if (user.equals(""))
+                user = "postgres";
 
             String url = "jdbc:postgresql://" + host + ":" + port + "/" + dbname;
             con = DriverManager.getConnection(url, user, pwd);
@@ -74,19 +85,19 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
 
     public DatabaseManipulation() {
         this.openDatasource();
-        String productSQL = "insert into product (product_code, product_name) values (?, ?);";
-        String modelSQL = "insert into model (product_model, unit_price, product_id) values (?, ?, ?);";
-        String locationSQL = "insert into location (country, city) values (?, ?);";
+        String productSQL = "insert into product (product_code, product_name) values (?, ?) on conflict do nothing;";
+        String modelSQL = "insert into model (product_model, unit_price, product_id) values (?, ?, ?) on conflict do nothing;";
+        String locationSQL = "insert into location (country, city) values (?, ?) on conflict do nothing;";
         String salesmanSQL = "insert into salesman (name, salesman_number, gender, age, mobile_phone, supply_center_id) " +
-                "values (?, ?, ?, ?, ?, ?);";
+                "values (?, ?, ?, ?, ?, ?) on conflict do nothing;";
         String supplyCenterSQL = "insert into supply_center (supply_center_name, director_name) " +
-                "values (?, ?)";
+                "values (?, ?) on conflict do nothing;";
         String enterpriseSQL = "insert into enterprise (enterprise_name, industry, location_id, supply_center_id) " +
-                "values (?, ?, ?, ?);";
+                "values (?, ?, ?, ?) on conflict do nothing;";
         String contractSQL = "insert into contract (contract_number, contract_date, enterprise_id) " +
-                "values (?, ?, ?)";
+                "values (?, ?, ?) on conflict do nothing;";
         String ordersSQL = "insert into orders (quantity, estimated_delivery_date, lodgement_date, model_id, contract_id, salesman_id) " +
-                "values (?, ?, ?, ?, ?, ?);";
+                "values (?, ?, ?, ?, ?, ?) on conflict do nothing;";
         try {
             productPS = con.prepareStatement(productSQL);
             modelPS = con.prepareStatement(modelSQL);
@@ -358,7 +369,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         if (con != null) {
             try {
                 con.commit();
