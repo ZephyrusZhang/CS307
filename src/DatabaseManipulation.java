@@ -30,6 +30,9 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             String url = "jdbc:postgresql://" + host + ":" + port + "/" + dbname;
             con = DriverManager.getConnection(url, user, pwd);
 
+            con.setAutoCommit(false);
+
+
         } catch (SQLException e) {
             System.err.println("Database connection failed");
             System.err.println(e.getMessage());
@@ -358,6 +361,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
     public void close() throws IOException {
         if (con != null) {
             try {
+                con.commit();
                 con.close();
                 con = null;
             } catch (Exception e) {

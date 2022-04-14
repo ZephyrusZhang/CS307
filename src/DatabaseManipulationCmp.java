@@ -188,6 +188,7 @@ public class DatabaseManipulationCmp implements DataManipulationCmp {
 
             String url = "jdbc:postgresql://" + host + ":" + port + "/" + dbname;
             con = DriverManager.getConnection(url, user, pwd);
+            con.setAutoCommit(false);
 
         } catch (SQLException e) {
             System.err.println("Database connection failed");
@@ -199,6 +200,8 @@ public class DatabaseManipulationCmp implements DataManipulationCmp {
     public void closeDatasource() {
         if (con != null) {
             try {
+                con.commit();
+
                 con.close();
                 con = null;
             } catch (Exception e) {
