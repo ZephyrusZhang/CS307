@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +6,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class DatabaseManipulation implements DataManipulation {
+public class DatabaseManipulation implements DataManipulation, Closeable {
     private Connection con = null;
     private ResultSet resultSet;
 
@@ -42,14 +39,6 @@ public class DatabaseManipulation implements DataManipulation {
 
     @Override
     public void closeDatasource() {
-        if (con != null) {
-            try {
-                con.close();
-                con = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -365,4 +354,15 @@ public class DatabaseManipulation implements DataManipulation {
         dm.closeDatasource();
     }
 
+    @Override
+    public void close() throws IOException {
+        if (con != null) {
+            try {
+                con.close();
+                con = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
