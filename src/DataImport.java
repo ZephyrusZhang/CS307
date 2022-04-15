@@ -7,7 +7,6 @@ import java.util.HashMap;
 import static assets.Supporting.*;
 
 public class DataImport {
-
     public static void importDataUsingHashMap(DataManipulation dm) {
         String[] tokens;
         int product_id = 1, model_id = 1, location_id = 1, salesman_id = 1, supply_center_id = 1, enterprise_id = 1, contract_id = 1, orders_id = 1;
@@ -35,7 +34,7 @@ public class DataImport {
                     }
                     product.put(tokens[6], product_id);
                     product_id++;
-                    dm.importOneProduct(tokens[6], tokens[7]);
+                    dm.importOneProduct(tokens[6], tokens[7],product_id);
                 }
                 //endregion
 
@@ -43,7 +42,7 @@ public class DataImport {
                 if (!model.containsKey(tokens[8])) {
                     model.put(tokens[8], model_id);
                     model_id++;
-                    dm.importOneModel(tokens[8], Integer.parseInt(tokens[9]), product.get(tokens[6]));
+                    dm.importOneModel(tokens[8], Integer.parseInt(tokens[9]), product.get(tokens[6]),model_id);
                 }
                 //endregion
 
@@ -51,7 +50,7 @@ public class DataImport {
                 if (!location.containsKey(tokens[3] + "," + tokens[4])) {
                     location.put(tokens[3] + "," + tokens[4], location_id);
                     location_id++;
-                    dm.importOneLocation(tokens[3], tokens[4]);
+                    dm.importOneLocation(tokens[3], tokens[4],location_id);
                 }
                 //endregion
 
@@ -59,7 +58,7 @@ public class DataImport {
                 if (!supply_center.containsKey(tokens[2])) {
                     supply_center.put(tokens[2], supply_center_id);
                     supply_center_id++;
-                    dm.importOneSupplyCenter(tokens[2], tokens[14]);
+                    dm.importOneSupplyCenter(tokens[2], tokens[14],supply_center_id);
                 }
                 //endregion
 
@@ -79,7 +78,7 @@ public class DataImport {
                     }
                     salesman.put(tokens[16], salesman_id);
                     salesman_id++;
-                    dm.importOneSalesman(tokens[15], tokens[16], tokens[17], Integer.parseInt(tokens[18]), tokens[19], supply_center.get(tokens[2]));
+                    dm.importOneSalesman(tokens[15], tokens[16], tokens[17], Integer.parseInt(tokens[18]), tokens[19], supply_center.get(tokens[2]),salesman_id);
                 }
                 //endregion
 
@@ -87,7 +86,7 @@ public class DataImport {
                 if (!enterprise.containsKey(aggregateString(tokens[1], tokens[5], tokens[3], tokens[4], tokens[2]))) {
                     enterprise.put(aggregateString(tokens[1], tokens[5], tokens[3], tokens[4], tokens[2]), enterprise_id);
                     enterprise_id++;
-                    dm.importOneEnterprise(tokens[1], tokens[5], location.get(aggregateString(tokens[3], tokens[4])), supply_center.get(tokens[2]));
+                    dm.importOneEnterprise(tokens[1], tokens[5], location.get(aggregateString(tokens[3], tokens[4])), supply_center.get(tokens[2]),enterprise_id);
                 }
                 //endregion
 
@@ -98,7 +97,7 @@ public class DataImport {
                     }
                     contract.put(tokens[0], contract_id);
                     contract_id++;
-                    dm.importOneContract(tokens[0], tokens[11], enterprise.get(aggregateString(tokens[1], tokens[5], tokens[3], tokens[4], tokens[2])));
+                    dm.importOneContract(tokens[0], tokens[11], enterprise.get(aggregateString(tokens[1], tokens[5], tokens[3], tokens[4], tokens[2])),contract_id);
                 }
                 //endregion
 
@@ -106,10 +105,19 @@ public class DataImport {
                 if (!orders.containsKey(aggregateString(tokens[10], tokens[12], tokens[13], tokens[8], tokens[0], tokens[16]))) {
                     orders.put(aggregateString(tokens[10], tokens[12], tokens[13], tokens[8], tokens[0], tokens[16]), orders_id);
                     orders_id++;
-                    dm.importOneOrders(Integer.parseInt(tokens[10]), tokens[12], tokens[13], model.get(tokens[8]), contract.get(tokens[0]), salesman.get(tokens[16]));
+                    dm.importOneOrders(Integer.parseInt(tokens[10]), tokens[12], tokens[13], model.get(tokens[8]), contract.get(tokens[0]), salesman.get(tokens[16]),orders_id);
                 }
                 //endregion
             }
+            dm.importProduct();
+            dm.importModel();
+            dm.importLocation();
+            dm.importSalesman();
+            dm.importSupplyCenter();
+            dm.importEnterprise();
+            dm.importContract();
+            dm.importOrder();
+
             long endTime = System.currentTimeMillis();
             long sec = (endTime - startTime) / 1000;
             System.out.printf("Data import costs %d s\n", sec);

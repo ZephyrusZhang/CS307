@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 public class DatabaseManipulation implements DataManipulation, Closeable {
     private Connection con = null;
     private ResultSet resultSet;
-
+    private static final int  BATCH_SIZE = 500;
     @Override
     public void openDatasource() {
         try {
@@ -113,31 +113,50 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
     }
 
     @Override
-    public void importOneProduct(String product_code, String product_name) {
+    public void importOneProduct(String product_code, String product_name,int cnt) {
         try {
             productPS.setString(1, product_code);
             productPS.setString(2, product_name);
-            productPS.executeUpdate();
+            productPS.addBatch();
+            if(cnt%BATCH_SIZE==0){
+                productPS.executeBatch();
+                productPS.clearBatch();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public void importProduct(){
+        try{
+        productPS.executeBatch();
+        }catch(SQLException ignored){
 
+        }
+    }
     @Override
-    public void importOneModel(String product_model, int unit_price, int product_id) {
+    public void importOneModel(String product_model, int unit_price, int product_id, int cnt) {
         try {
             modelPS.setString(1, product_model);
             modelPS.setInt(2, unit_price);
             modelPS.setInt(3, product_id);
-
-            modelPS.executeUpdate();
+            modelPS.addBatch();
+            if(cnt%BATCH_SIZE==0){
+                modelPS.executeBatch();
+                modelPS.clearBatch();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public void importModel(){
+        try{
+            modelPS.executeBatch();
+        }catch(SQLException ignored){
 
+        }
+    }
     @Override
-    public void importOneLocation(String country, String city) {
+    public void importOneLocation(String country, String city, int cnt) {
         try {
             locationPS.setString(1, country);
             if (city.equals("NULL")) {
@@ -145,14 +164,24 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             } else {
                 locationPS.setString(2, city);
             }
-            locationPS.executeUpdate();
+            locationPS.addBatch();
+            if(cnt%BATCH_SIZE==0){
+                locationPS.executeBatch();
+                locationPS.clearBatch();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public void importLocation(){
+        try{
+            locationPS.executeBatch();
+        }catch(SQLException ignored){
 
+        }
+    }
     @Override
-    public void importOneSalesman(String name, String salesman_number, String gender, int age, String mobile_phone, int supply_center_id) {
+    public void importOneSalesman(String name, String salesman_number, String gender, int age, String mobile_phone, int supply_center_id,int cnt) {
         try {
             salesmanPS.setString(1, name);
             salesmanPS.setString(2, salesman_number);
@@ -161,52 +190,92 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             salesmanPS.setString(5, mobile_phone);
             salesmanPS.setInt(6, supply_center_id);
 
-            salesmanPS.executeUpdate();
+            salesmanPS.addBatch();
+            if(cnt%BATCH_SIZE==0){
+                salesmanPS.executeBatch();
+                salesmanPS.clearBatch();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public void importSalesman(){
+        try{
+            salesmanPS.executeBatch();
+        }catch(SQLException ignored){
 
+        }
+    }
     @Override
-    public void importOneSupplyCenter(String supply_center_name, String director_name) {
+    public void importOneSupplyCenter(String supply_center_name, String director_name, int cnt) {
         try {
             supplyCenterPS.setString(1, supply_center_name);
             supplyCenterPS.setString(2, director_name);
 
-            supplyCenterPS.executeUpdate();
+            supplyCenterPS.addBatch();
+            if(cnt%BATCH_SIZE==0){
+                supplyCenterPS.executeBatch();
+                supplyCenterPS.clearBatch();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public void importSupplyCenter(){
+        try{
+            supplyCenterPS.executeBatch();
+        }catch(SQLException ignored){
 
+        }
+    }
     @Override
-    public void importOneEnterprise(String enterprise_name, String industry, int location_id, int supply_center_id) {
+    public void importOneEnterprise(String enterprise_name, String industry, int location_id, int supply_center_id, int cnt) {
         try {
             enterprisePS.setString(1, enterprise_name);
             enterprisePS.setString(2, industry);
             enterprisePS.setInt(3, location_id);
             enterprisePS.setInt(4, supply_center_id);
-            enterprisePS.executeUpdate();
+            enterprisePS.addBatch();
+            if(cnt%BATCH_SIZE==0){
+                enterprisePS.executeBatch();
+                enterprisePS.clearBatch();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public void importEnterprise(){
+        try{
+            enterprisePS.executeBatch();
+        }catch(SQLException ignored){
 
+        }
+    }
     @Override
-    public void importOneContract(String contract_number, String contract_date, int enterprise_id) {
+    public void importOneContract(String contract_number, String contract_date, int enterprise_id,int cnt) {
         try {
             contractPS.setString(1, contract_number);
             contractPS.setDate(2, Date.valueOf(contract_date));
             contractPS.setInt(3, enterprise_id);
 
-            contractPS.executeUpdate();
+            contractPS.addBatch();
+            if(cnt%BATCH_SIZE==0){
+                contractPS.executeBatch();
+                contractPS.clearBatch();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public void importContract(){
+        try{
+            contractPS.executeBatch();
+        }catch(SQLException ignored){
 
+        }
+    }
     @Override
-    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id, int salesman_id) throws ParseException {
+    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id, int salesman_id,int cnt) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date deadline = sdf.parse("2022-04-15");
         java.util.Date date;
@@ -227,12 +296,22 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             ordersPS.setInt(5, contract_id);
             ordersPS.setInt(6, salesman_id);
 
-            ordersPS.executeUpdate();
+            ordersPS.addBatch();
+            if(cnt%BATCH_SIZE==0){
+                ordersPS.executeBatch();
+                ordersPS.clearBatch();
+            }
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
     }
+    public void importOrder(){
+        try{
+            ordersPS.executeBatch();
+        }catch(SQLException ignored){
 
+        }
+    }
     @Override
     public void cleanData() {
         String sql = "update location set city = null where city = 'NULL'";
