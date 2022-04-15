@@ -39,8 +39,4 @@ public interface DataManipulation {
     void importOrder();
 
     void cleanData();
-
-    void alterForeignKey();
-
-    void truncateAllTables();
 }

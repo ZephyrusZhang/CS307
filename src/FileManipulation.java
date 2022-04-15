@@ -87,14 +87,4 @@ public class FileManipulation implements DataManipulation {
 
     }
 
-    @Override
-    public void alterForeignKey() {
-
-    }
-
-    @Override
-    public void truncateAllTables() {
-
-    }
-
 }
