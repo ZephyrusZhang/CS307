@@ -11,7 +11,8 @@ import java.util.concurrent.Executors;
 public class DatabaseManipulation implements DataManipulation, Closeable {
     private Connection con = null;
     private ResultSet resultSet;
-    private static final int  BATCH_SIZE = 500;
+    private static final int BATCH_SIZE = 500;
+
     @Override
     public void openDatasource() {
         try {
@@ -19,24 +20,24 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
 
         } catch (ClassNotFoundException e) {
             System.err.println("Cannot find the PostgresSQL driver. Check CLASSPATH.");
-            System.exit(1);
+            throw new RuntimeException("Fail to locate Postgresql driver");
         }
 
         try {
             EasyReader in = new EasyReader(System.in);
-            String host = in.nextLine("host");
-            String dbname = in.nextLine("database name");
-            String port = in.nextLine("port");
-            String user = in.nextLine("user");
-            String pwd = in.nextLine("password");
+            String host = in.nextLine("Server [localhost]");
             if (host.equals(""))
                 host = "localhost";
+            String dbname = in.nextLine("Database [postgres]");
             if (dbname.equals(""))
                 dbname = "postgres";
+            String port = in.nextLine("Port [5432]");
             if (port.equals(""))
                 port = "5432";
+            String user = in.nextLine("User [postgres]");
             if (user.equals(""))
                 user = "postgres";
+            String pwd = in.nextLine("User " + user + "'s password");
 
             String url = "jdbc:postgresql://" + host + ":" + port + "/" + dbname;
             con = DriverManager.getConnection(url, user, pwd);
@@ -47,12 +48,8 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
         } catch (SQLException e) {
             System.err.println("Database connection failed");
             System.err.println(e.getMessage());
-            System.exit(1);
+            throw new RuntimeException("Database connection failed");
         }
-    }
-
-    @Override
-    public void closeDatasource() {
     }
 
     @Override
@@ -113,12 +110,12 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
     }
 
     @Override
-    public void importOneProduct(String product_code, String product_name,int cnt) {
+    public void importOneProduct(String product_code, String product_name, int cnt) {
         try {
             productPS.setString(1, product_code);
             productPS.setString(2, product_name);
             productPS.addBatch();
-            if(cnt%BATCH_SIZE==0){
+            if (cnt % BATCH_SIZE == 0) {
                 productPS.executeBatch();
                 productPS.clearBatch();
             }
@@ -126,13 +123,15 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             e.printStackTrace();
         }
     }
-    public void importProduct(){
-        try{
-        productPS.executeBatch();
-        }catch(SQLException ignored){
+
+    public void importProduct() {
+        try {
+            productPS.executeBatch();
+        } catch (SQLException ignored) {
 
         }
     }
+
     @Override
     public void importOneModel(String product_model, int unit_price, int product_id, int cnt) {
         try {
@@ -140,7 +139,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             modelPS.setInt(2, unit_price);
             modelPS.setInt(3, product_id);
             modelPS.addBatch();
-            if(cnt%BATCH_SIZE==0){
+            if (cnt % BATCH_SIZE == 0) {
                 modelPS.executeBatch();
                 modelPS.clearBatch();
             }
@@ -148,13 +147,15 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             e.printStackTrace();
         }
     }
-    public void importModel(){
-        try{
+
+    public void importModel() {
+        try {
             modelPS.executeBatch();
-        }catch(SQLException ignored){
+        } catch (SQLException ignored) {
 
         }
     }
+
     @Override
     public void importOneLocation(String country, String city, int cnt) {
         try {
@@ -165,7 +166,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
                 locationPS.setString(2, city);
             }
             locationPS.addBatch();
-            if(cnt%BATCH_SIZE==0){
+            if (cnt % BATCH_SIZE == 0) {
                 locationPS.executeBatch();
                 locationPS.clearBatch();
             }
@@ -173,15 +174,17 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             e.printStackTrace();
         }
     }
-    public void importLocation(){
-        try{
+
+    public void importLocation() {
+        try {
             locationPS.executeBatch();
-        }catch(SQLException ignored){
+        } catch (SQLException ignored) {
 
         }
     }
+
     @Override
-    public void importOneSalesman(String name, String salesman_number, String gender, int age, String mobile_phone, int supply_center_id,int cnt) {
+    public void importOneSalesman(String name, String salesman_number, String gender, int age, String mobile_phone, int supply_center_id, int cnt) {
         try {
             salesmanPS.setString(1, name);
             salesmanPS.setString(2, salesman_number);
@@ -191,7 +194,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             salesmanPS.setInt(6, supply_center_id);
 
             salesmanPS.addBatch();
-            if(cnt%BATCH_SIZE==0){
+            if (cnt % BATCH_SIZE == 0) {
                 salesmanPS.executeBatch();
                 salesmanPS.clearBatch();
             }
@@ -199,13 +202,15 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             e.printStackTrace();
         }
     }
-    public void importSalesman(){
-        try{
+
+    public void importSalesman() {
+        try {
             salesmanPS.executeBatch();
-        }catch(SQLException ignored){
+        } catch (SQLException ignored) {
 
         }
     }
+
     @Override
     public void importOneSupplyCenter(String supply_center_name, String director_name, int cnt) {
         try {
@@ -213,7 +218,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             supplyCenterPS.setString(2, director_name);
 
             supplyCenterPS.addBatch();
-            if(cnt%BATCH_SIZE==0){
+            if (cnt % BATCH_SIZE == 0) {
                 supplyCenterPS.executeBatch();
                 supplyCenterPS.clearBatch();
             }
@@ -221,13 +226,15 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             e.printStackTrace();
         }
     }
-    public void importSupplyCenter(){
-        try{
+
+    public void importSupplyCenter() {
+        try {
             supplyCenterPS.executeBatch();
-        }catch(SQLException ignored){
+        } catch (SQLException ignored) {
 
         }
     }
+
     @Override
     public void importOneEnterprise(String enterprise_name, String industry, int location_id, int supply_center_id, int cnt) {
         try {
@@ -236,7 +243,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             enterprisePS.setInt(3, location_id);
             enterprisePS.setInt(4, supply_center_id);
             enterprisePS.addBatch();
-            if(cnt%BATCH_SIZE==0){
+            if (cnt % BATCH_SIZE == 0) {
                 enterprisePS.executeBatch();
                 enterprisePS.clearBatch();
             }
@@ -244,22 +251,24 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             e.printStackTrace();
         }
     }
-    public void importEnterprise(){
-        try{
+
+    public void importEnterprise() {
+        try {
             enterprisePS.executeBatch();
-        }catch(SQLException ignored){
+        } catch (SQLException ignored) {
 
         }
     }
+
     @Override
-    public void importOneContract(String contract_number, String contract_date, int enterprise_id,int cnt) {
+    public void importOneContract(String contract_number, String contract_date, int enterprise_id, int cnt) {
         try {
             contractPS.setString(1, contract_number);
             contractPS.setDate(2, Date.valueOf(contract_date));
             contractPS.setInt(3, enterprise_id);
 
             contractPS.addBatch();
-            if(cnt%BATCH_SIZE==0){
+            if (cnt % BATCH_SIZE == 0) {
                 contractPS.executeBatch();
                 contractPS.clearBatch();
             }
@@ -267,15 +276,17 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             e.printStackTrace();
         }
     }
-    public void importContract(){
-        try{
+
+    public void importContract() {
+        try {
             contractPS.executeBatch();
-        }catch(SQLException ignored){
+        } catch (SQLException ignored) {
 
         }
     }
+
     @Override
-    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id, int salesman_id,int cnt) throws ParseException {
+    public void importOneOrders(int quantity, String estimated_delivery_date, String lodgement_date, int model_id, int contract_id, int salesman_id, int cnt) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date deadline = sdf.parse("2022-04-15");
         java.util.Date date;
@@ -297,7 +308,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             ordersPS.setInt(6, salesman_id);
 
             ordersPS.addBatch();
-            if(cnt%BATCH_SIZE==0){
+            if (cnt % BATCH_SIZE == 0) {
                 ordersPS.executeBatch();
                 ordersPS.clearBatch();
             }
@@ -305,13 +316,15 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
             e.printStackTrace();
         }
     }
-    public void importOrder(){
-        try{
+
+    public void importOrder() {
+        try {
             ordersPS.executeBatch();
-        }catch(SQLException ignored){
+        } catch (SQLException ignored) {
 
         }
     }
+
     @Override
     public void cleanData() {
         String sql = "update location set city = null where city = 'NULL'";
@@ -444,7 +457,7 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
         DatabaseManipulation dm = new DatabaseManipulation();
         dm.openDatasource();
         dm.parallelImportSalesmanData();
-        dm.closeDatasource();
+        dm.close();
     }
 
     @Override

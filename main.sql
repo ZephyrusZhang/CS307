@@ -78,3 +78,12 @@ create table orders
 --     constraint model_order foreign key (model_id) references model (id)
 --     constraint orders_salesman_id foreign key (salesman_id) references salesman (id)
 );
+
+alter table model add constraint model_product_fk foreign key (product_id) references product (id);
+alter table salesman add constraint salesman_supply_center_fk foreign key (supply_center_id) references supply_center (id);
+alter table enterprise add constraint location_enterprise foreign key (location_id) references location (id);
+alter table enterprise add constraint enterprise_supply_center_fk foreign key (supply_center_id) references supply_center (id);
+alter table contract add constraint enterprise_contract foreign key (enterprise_id) references enterprise (id);
+alter table orders add constraint contract_order foreign key (contract_id) references contract (id);
+alter table orders add constraint model_order foreign key (model_id) references model (id);
+alter table orders add constraint orders_salesman_id foreign key (salesman_id) references salesman (id);

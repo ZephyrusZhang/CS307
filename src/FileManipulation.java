@@ -1,14 +1,7 @@
-import java.sql.Date;
-
 public class FileManipulation implements DataManipulation {
 
     @Override
     public void openDatasource() {
-    }
-
-    @Override
-    public void closeDatasource() {
-
     }
 
     @Override
@@ -103,4 +96,5 @@ public class FileManipulation implements DataManipulation {
     public void truncateAllTables() {
 
     }
+
 }

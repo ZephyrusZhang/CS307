@@ -7,6 +7,6 @@
 
 *.iml
 
-tokens.txt
+resources/tokens.txt
 
 CS307.iml

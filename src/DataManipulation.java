@@ -4,8 +4,6 @@ import java.text.ParseException;
 public interface DataManipulation {
     void openDatasource();
 
-    void closeDatasource();
-
     void executeDDL();
 
     void importOneProduct(String product_code, String product_name, int cnt);

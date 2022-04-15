@@ -20,7 +20,7 @@ public class DataImport {
         HashMap<String, Integer> orders = new HashMap<>();
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("contract_info.csv"));
+            BufferedReader reader = new BufferedReader(new FileReader("resources/contract_info.csv"));
             String line;
             reader.readLine();
             long startTime = System.currentTimeMillis();
