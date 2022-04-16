@@ -1,0 +1,630 @@
+%-- coding: UTF-8 --
+% !TEX TS-program = xelatex
+% !TEX encoding = UTF-8
+% !Mode:: "TeX:UTF-8"
+
+
+\documentclass[onecolumn, oneside, ctexart, UTF8, b4paper]{SUSTechHomework}
+\setlength{\parindent}{2em}
+\linespread{1.5}
+
+\usepackage{tikz}
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usetikzlibrary{arrows}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{subfigure}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage[UTF8]{ctex}
+\usepackage{tabu}
+\usepackage{booktabs}
+\usepackage{makecell}
+
+\renewcommand\refname{Reference}
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}}
+
+\newfontfamily\monaco{Monaco-1.ttf}
+
+\lstset{
+    columns=fixed,
+    breaklines=true
+    numbers=left,                                        % 在左侧显示行号
+    frame=single,                                        % 不显示背景边框
+    backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
+    keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
+    numberstyle=\footnotesize\color{darkgray},           % 设定行号格式
+    commentstyle=\monaco\color[RGB]{0,96,96},                % 设置代码注释的格式
+    stringstyle=\small\monaco\slshape\color[RGB]{128,0,0},     % 设置字符串格式
+    showstringspaces=false,   % 不显示字符串中的空格
+    language=Java,
+    basicstyle=\small\monaco
+}
+
+\lstset{
+    columns=fixed,
+    breaklines=true
+    numbers=left,                                        % 在左侧显示行号
+    frame=single,                                        % 不显示背景边框
+    backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
+    keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
+    numberstyle=\footnotesize\color{darkgray},           % 设定行号格式
+    commentstyle=\monaco\color[RGB]{0,96,96},                % 设置代码注释的格式
+    stringstyle=\small\monaco\slshape\color[RGB]{128,0,0},     % 设置字符串格式
+    showstringspaces=false,   % 不显示字符串中的空格
+    language=SQL,
+    basicstyle=\small\monaco
+}
+
+\usetikzlibrary{arrows,shapes,chains}
+\coursecode{\textbf{CS307}}
+\coursename{\textbf{Database Principle}}
+\author{张闻城}
+\sid{谢宇东}
+\title{Project 1}
+\date{April 4, 2022}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\setcounter{page}{0}
+\newpage
+
+\section{E-R Diagram}
+
+
+
+
+
+\section{Database Design}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.4]{resources/figure-1-2.png}
+    \caption{Datagrip E-R Diagram}
+    \label{fig1}
+\end{figure}
+
+In our design, tables' primary keys are all serial id, since it is easy to be compared when join tables. And the unique constraint in tables is actually the attributes that distinguish different rows. Besides, for some \textbf{varchar} attribute whose length is uncertain, we still restrict its length to avoid some dirty data.
+
+\subsection{\textbf{Product}}
+Different products should have different \textbf{product code}, thus add unique constraint to attribute \textbf{product\_code}. Every product should have its own name, so \textbf{product\_name} is not null.
+
+\subsection{\textbf{Model}}
+It is hard to find two different models but with the same model name, thus we can consider \textbf{product\_model} (i.e model name) to be unique. A single kind of product may have several models, and relationship \textbf{[product-model]} is one-to-many, thus we add one column \textbf{product\_id} as a foreign key referencing to a single product.
+
+\subsection{\textbf{Location}}
+This is a table stores all location. The \textbf{country} can not be null while \textbf{city} can be null when \textbf{country} isn't China. Different location have different country or city, thus add unique constraint to combination of this attributes.
+
+
+\subsection{\textbf{Supply Center}}
+For a certain supply center, it should have its own director and salesman. Since there is no suitable attribute in the provided data that can distinguish different rows, we use union unique constraint \textbf{UNIQUE (supply\_center\_name, director\_name)} to avoid data duplication.
+
+\subsection{\textbf{Salesman}}
+As mentioned before, a certain can have only one director but several salesman, which is another one-to-many relation, so we use \textbf{supply\_center\_id} to indicate which supply center the salesman serve for. Obviously, \textbf{salesman\_number} can distinguish different salesmen, so add unique constraint to it. Attribute \textbf{name} may not satisfy \textbf{1NF} since it can be split into \textbf{firstname} and \textbf{surname}. But the truth is that there is no need to split it up since it won't make anything different, instead it makes data processing more cumbersome because we need to clarify the order of first name and surname of foreigners and Chinese.
+
+\subsection{\textbf{Enterprise}}
+Use union constraint to distinguish different rows. And use foreign keys, \textbf{location\_id} and \textbf{supply\_center\_id} to indicate its location and the supply center corresponding to this enterprise.
+
+\subsection{\textbf{Contract}}
+
+
+\subsection{\textbf{Order}}
+
+
+
+
+
+\section{Data Import}
+\subsection{\textbf{Simple import}}
+The simplest way to import data is to read csv file one line by one line and split one line into several tokens, and then fill the parameter in proper location of the \textbf{INSERT} sql statement. Here take importing one row into \textbf{product} as an example.
+\begin{lstlisting}[language=Java]
+public static void navieDataImport(DataManipulation dm) {
+    try {
+        BufferedReader reader = new BufferedReader(new File("contract_info.csv"));
+        reader.readLine();
+        String line;
+        String[] tokens;
+        while ((line = reader.readLine()) != null) {
+            tokens = line.split(",");
+            dm.importOneProduct(tokens[6], tokens[7]);
+            ...
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+//This function is defined in class DatabaseManipulation
+public void importOneProduct(String product_code, String product_name) {
+        String sql = "insert into product (product_code, product_name)" +
+                "values (?, ?);";
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, product_code);
+            preparedStatement.setString(2, product_name);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            if (!e.getMessage().matches("错误: 重复键违反唯一约束\".*?\"\n" +
+                    " {2}详细：键值\"(.*?)=(.*?)\" 已经存在")) {
+                e.printStackTrace();
+            }
+        }
+    }
+\end{lstlisting}
+Note: The statement in \textbf{catch} block is to ignore the duplicate row exception when importing data.
+
+Other function to import data is similar to the format above. And this method cost about 60s to import all data in \textbf{contract\_info.csv}.
+
+\subsection{\textbf{Import Using HashMap}}
+Consider that in the previous importing method, we need to execute \textbf{INSERT} statement for every tables in each line, which causes much time consumption in the procedure of communication between Java client and database. Thus we can reduce the communication times by avoiding inserting duplicate data into tables. \textbf{HashMap} is definitely the best tool to do this task. We take table \textbf{product} and \textbf{enterprise} as example.
+\begin{lstlisting}[language=Java]
+public static void importDataUsingHashMap(DataManipulation dm) {
+    String[] tokens;
+    int product_id = 1, enterprise_id = 1;
+    HashMap<String, Integer> product = new HashMap<>();
+    try {
+        BufferedReader reader = new BufferedReader(new File("contract_info.csv"));
+        reader.readLine();
+        String line;
+        while ((line = reader.readLine())) {
+            tokens = line.split(",");
+
+            if (!product.containsKey(tokens[6])) {
+                if (!tokens[6].matches("[a-zA-Z0-9]{7}")) {
+                    throw new IllegalArgumentException("Invalid product code");
+                }
+                product.put(tokens[6], product_id);
+                product_id++;
+                dm.importOneProduct(tokens[6], tokens[7]);
+            }
+
+            //Function aggregateString is used to connect tokens with ","
+            if (!enterprise.containsKey(aggregateString(tokens[1], tokens[5], tokens[3], tokens[4], tokens[2]))) {
+                enterprise.put(aggregateString(tokens[1], tokens[5], tokens[3], tokens[4], tokens[2]), enterprise_id);
+                enterprise_id++;
+                dm.importOneEnterprise(tokens[1], tokens[5], location.get(aggregateString(tokens[3], tokens[4])), supply_center.get(tokens[2]));
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+\end{lstlisting}
+We use the attributes with \textbf{UNIQUE} constraint in the DDL as HashMap key. For those tables whose \textbf{UNIQUE} constraint containing several attributes, we connect these attributes with \textbf{comma} and use it as HashMap key (see the codes inserting one row into table \textbf{enterprise} above). The \textbf{xxx\_id} is actually the serial primary key value in the corresponding table. Because no duplicate rows will be inserted into one table several times, the serial id value in the tables are all arithmetic progression starting from 1. This value is also to be used to reference other tables' row in a certain table's foreign key.
+
+
+
+\section{Compare DBMS with File I/O}
+\subsection{\textbf{DBMS}}
+\subsubsection{\textbf{INSERT}}
+Here take table \textbf{supply\_center} in this project as an example. We simply insert 500,000 pieces of data into the table. During the test, we find that when inserting data into tables with some constraints or check (here take \textbf{NOT NULL} as an example), its efficiency will certainly decreases. This because checking for constraints will cost many time, and definitely the more constraints and rows the table has, the more time will inserting cost.
+
+Besides, according to the reference websites the teacher offers, database \textbf{INDEX} may also affect the efficiency of inserting. Creating \textbf{INDEX} of a certain attribute in one table can improve the performance, which is based on \textbf{B+ Tree} or other data structure. Database need to maintain the data structure when inserting a piece of data dynamically, which will increase time cost definitely.
+
+\begin{lstlisting}[language=SQL]
+-- Data size: 500,000 rows.
+create table supply_center
+(
+    id                 serial primary key,
+    supply_center_name varchar(80) not null,
+    director_name      varchar(80) not null,
+     constraint supply_center_uk unique (supply_center_name), -- Constraint 1
+     constraint union_unique unique (id, supply_center_name, director_name), -- Constraint 2
+     constraint id_ck check ( id > 0 ), -- Constraint 3
+     constraint supply_center_ck check ( supply_center_name similar to '.*?'), -- Constraint 4
+     constraint director_name_ck check ( director_name similar to '.*?') -- Constraint 5
+);
+create index supply_center_name_idx on supply_center(supply_center_name); -- Index 1
+create index director_name_idx on supply_center(director_name); -- Index 2
+\end{lstlisting}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.5]{resources/figure-3-1.png}
+    \caption{\textbf{INSERT} Time Cost Using DML}
+    \label{fig2}
+\end{figure}
+
+\subsubsection{\textbf{DELETE}}
+First factor that affect the deleting efficiency is the restrict condition: the more conditions you have, the slower will deleting be. \textbf{INDEX} still can slow down the efficiency because of maintaining of data structure.
+
+\begin{lstlisting}[language=SQL]
+delete from model where product_model   -- Data size: 500,000 rows
+                    like '%Aldo%'       -- Condition 1
+   or product_model like '%Rob%'        -- Condition 1
+   or product_model like '%Laree%'      -- Condition 1
+   or product_model like '%Global%'     -- Condition 1
+   or product_model like '%Leland%';    -- Condition 1
+\end{lstlisting}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.55]{resources/figure-3-2.png}
+    \caption{\textbf{DELETE} Time Cost Using DML (500,000 rows)}
+    \label{fig3}
+\end{figure}
+
+\subsubsection{\textbf{SELECT}}
+As mentioned in sectione \textbf{Delete} we have talked about the efficiency affected by constraints, so here I won't mentione again. \textbf{INDEX} has been mentioned several times, which can speed up the execution of query statement.
+
+\begin{lstlisting}[language=SQL]
+select * from salesman where mobile_phone = '32759067120';  -- Data size: 1,000,000 rows
+
+create index idx on salesman(mobile_phone); -- Create INDEX
+\end{lstlisting}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{resources/figure-3-3.png}
+    \caption{\textbf{SELECT} Time Cost Using DML (1,000,000 rows)}
+    \label{fig4}
+\end{figure}
+
+\subsubsection{\textbf{UPDATE}}
+\textbf{UPDATE} is usually executed together with \textbf{WHERE}, a condition filter, which can be speeded up using \textbf{INDEX} (since \textbf{INDEX} reduce time cost to find corresponding rows). However, \textbf{UPDATE} will change the value of certain rows' attributes. If the attributes have been indexed, database need to maintain its index \textbf{B+ Tree}, which can cost much time, even more when the table is huge.
+\begin{lstlisting}[language=SQL]
+update salesman set age = age + 10 where age = 0;   -- Data size: 100,000 rows
+
+create index idx on salesman (age);
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{resources/figure-3-4.png}
+    \caption{\textbf{UPDATE} Time Cost Using DML}
+    \label{fig5}
+\end{figure}
+
+\textbf{INDEX} is an important tool in database. In this project, we find out several characteristics the \textbf{INDEX} has:
+
+\begin{enumerate}
+    \item [Pros.]
+    \begin{enumerate}
+        \item [i.]
+        By using \textbf{B+ Tree} and other data structure, it can optimize the performance of \textbf{query} procedure of those indexing columns
+        \item [ii.]
+        Guarantee the uniqueness of each row of data in the database table by creating a unique index
+    \end{enumerate}
+    \item [Cons.]
+    \begin{enumerate}
+        \item [i.]
+        Creating indexes and maintaining them is time consuming, and that time increases as the table's size increases
+        \item [ii.]
+        To maintain index, some data structure will be used, which means more memory consumption of a certain table.
+        \item [iii.]
+        Because if the maintenance of index, more time will be consumed when \textbf{INSERT}, \textbf{DELETE} and \textbf{UPDATE}
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{\textbf{File I/O}}
+
+Data of database tables are all stored in \textbf{.csv} file. The tests below all do the same manipulation as the last \textbf{DBMS} section.
+
+\subsubsection{\textbf{INSERT}}
+For \textbf{INSERT}, database should check for data constraints, such as \textbf{NOT NULL}, length of \textbf{VARCHAR}, and \textbf{UNIQUE}, then insert the data into the table.
+\begin{lstlisting}[language=Java]
+//检查 not null 约束
+if (tokens[0].length() == 0 || tokens[1].length() == 0) {
+    throw new IllegalArgumentException(String.format("Attribute is not allowed to be null at row %d", line_cnt));
+}
+//检查是否超出 varchar(80) 最大长度
+if (tokens[0].length() > 80 || tokens[1].length() > 80) {
+    throw new IllegalArgumentException(String.format("%s is too long for varchar(80) at row %d", tokens[0], line_cnt));
+}
+// 利用HashMap检查 unique 约束
+if (!supply_center.containsKey(tokens[0] + "," + tokens[1])) {
+    supply_center.put(tokens[0], serial_id);
+    writer.write(Supporting.aggregateString(String.valueOf(serial_id), tokens[0], tokens[1]));
+    //...
+}
+\end{lstlisting}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+     \hline
+     INSERT(500,000 rows) & DBMS & File I/O \\
+    \hline
+    Cost/ms & 75035 & 488 \\
+    \hline
+\end{tabular}
+\end{center}
+
+File I/O \textbf{INSERT} is much faster than that of DBMS, here are some possible reasones.
+\begin{enumerate}
+    \item [i.]
+    Using JDBC to execute some SQL statements in Java will cost much time in communicating with DBMS
+    \item [ii.]
+    DBMS will do many checking when inserting a row to satisfy the constraints, which is far more strict than data validity checking in this project
+\end{enumerate}
+
+\subsubsection{\textbf{DELETE}}
+To delete certain rows in file database table, we can implement it by retrieving table one row by one row, store those rows not satisfying the \textbf{WHERE} condition into cache and skip those rows satisfying the condition and finally write all data in cache back to table.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+     \hline
+     DELETE(500,000 rows) & DBMS & File I/O \\
+    \hline
+    Cost/ms & 7 & 51 \\
+    \hline
+\end{tabular}
+\end{center}
+
+In this test, file I/O is faster than DBMS. This is because the way to delete one row is different. In file I/O, I need to scan the whole table and store those rows violating \textbf{WHERE} conditions into cache, then restore all data in cache back to the table. When the table is huge, it is definitely much time consuming. DBMS uses a certain data structure to make it fast when deleting one certain row.
+
+\subsubsection{\textbf{SELECT}}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+     \hline
+     SELECT(1,000,000 rows) & DBMS & File I/O \\
+    \hline
+    Cost/ms & 77 & 321 \\
+    \hline
+\end{tabular}
+\end{center}
+Due to different data structure, DBMS perform better than file I/O in querying.
+
+\subsubsection{\textbf{UPDATE}}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+     \hline
+     UPDATE(1,000,000 rows) & DBMS & File I/O \\
+    \hline
+    Cost/ms & 1925 & 828 \\
+    \hline
+\end{tabular}
+\end{center}
+
+\subsection{\textbf{Comparison Analysis and Summary}}
+Based on the test results below, we can figure out that DBMS performs better than file I/O in the most cases of simple database manipulation. The reason has been mentioned many times, which is the data structure difference.
+
+\noindent \textbf{Physical Storage Structure\upcite{ref1}}   For each table in the database, it is stored as a \textbf{page} array. Each page has a fixed memory size, which is usually 8kb (postgresql). The inner structure of a page is as below.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{resources/figure-4-1.png}
+    \caption{Page Structure}
+    \label{fig:page_struture}
+\end{figure}
+
+\begin{enumerate}
+    \item[i.]
+    \textbf{page header}: Containing general information of current page
+    \item[ii.]
+    \textbf{item(ID)}: Each is a \textbf{(offset, length)} pair. \textbf{offset} is a byte-offset to the start of an item and \textbf{length} is the row's byte size.
+    \item[iii.]
+    \textbf{tuple}: Used to store row actual data. If one certain row is too long to be stored in this page, TOAST(The Oversized-Attribute Storage Technique) will be applied.
+    \item[iv.]
+    \textbf{special}: Special data used to index access, and differs from method to method, usually empty
+    \item[v.]
+    \textbf{free space}: Unallocated memory. New \textbf{item} is allocated from its head while new \textbf{tuple} is allocated from its tail.
+\end{enumerate}
+
+This page structure is certainly like os paging storage mechnanism: when the data in one page is going to overflow, database will allocated a new fixed size page for the new data.
+We all know that disk I/O is a extremely time consuming work, in our simple file I/O query, we scan the table one line by one line and this requires to access disk every time, so it wastes many time on disk I/O. Paging storage reduces the disk I/O, every time a query statement is executed, DBMS fetch data from disk one page by one page, thus reducing disk I/O cost and also improve cache hit rate. That is why DBMS perform better than file I/O for some sql statements in this project.
+
+
+
+\section{\textbf{Advanced Task}}
+
+\subsection{\textbf{High concurrency}}
+
+Concurrency is always an important conception in database. In this project, we apply the simple data import using multi-thread.
+
+\begin{lstlisting}[language=Java]
+private static final ExecutorService threadPool = Executors.newFixedThreadPool(50);
+
+public void parallelImportSalesmanData() {
+    CountDownLatch latch = new CountDownLatch(100);
+    long startTime = System.currentTimeMillis();
+    for (int i = 0; i < 100; i++) {
+        threadPool.execute(() -> {
+        executeBatchImportSalesman(reader);
+        latch.countDown();
+        });
+    }
+    latch.await();
+}
+
+public synchronized void commit() {
+        try {
+            con.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();;
+        }
+    }
+\end{lstlisting}
+
+In this example, we allocate a data import task, with about 1,000,000 pieces of data, to a thread pool with 50 threads, and each thread complete a sub-task with 10,000 pieces of data. Multi-thread takes about 23s, while single thread taking 136s, to finish the task.
+
+One thing to be considered when meeting multi thread problem is thread safety. In this test, I read files and insert data into table in multiple threads. File I/O class being used is \textbf{BufferedReader}, which is synchronized\upcite{ref2}. When committing changes to database, I add a synchronized method to make that only one thread commit at a certain time. Therefore, multi thread used in this part is safe, and check the result we know that all data (994411 rows, since there maybe some duplicate rows) are inserted into the table successfully.
+
+High concurrency can improve performance of transaction greatly in DBMS. But as I've mentioned above, we must consider problem about thread safety. To make manipulation to database satisfy consistency all the time, DBMS will add lock to the resource to prevent it is accessed by several threads(transactions) at one time. However, this may lead to another problem——deadlock.
+
+\begin{figure}[H]
+\centering
+\subfigure[DDL]{
+\label{Fig.5.1.1}
+\includegraphics[scale=0.23]{resources/figure-5-1-1.png}
+}
+\subfigure[事务1]{
+\label{Fig.5.1.2}
+\includegraphics[scale=0.30]{resources/figure-5-1-2.png}
+}
+\subfigure[事务2]{
+\label{Fig.5.1.3}
+\includegraphics[scale=0.30]{resources/figure-5-1-3.png}
+}
+\end{figure}
+
+If the 2 transactions are executed in parallel, deadlock may occur. Transaction 1 insert student 3 first then transaction 2 insert student 4, and they are both not committed. Since there is an index on \textbf{id}, and student 3's id index will be stored and locked. When transaction 2 executes second statement, finding that student 3 already in the index, so waiting for transaction 1 to finish. At this time execute transaction 1's second insert, finding that student 4 already in the index, so waiting for transaction 2 to finish. Two transactions both waits for each other, deadlock occurs.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{resources/figure-5-2.png}
+    \caption{Deadlock detected}
+    \label{fig.5.2}
+\end{figure}
+
+\subsection{\textbf{Transaction Management}}
+ \textbf{A transaction is a unit of program execution that accesses and possibly updates various data items}(copied from lecture slide). Transaction are designed to ensure the \textbf{Atomicity}, \textbf{Consistency}, \textbf{Isolation} and \textbf{Durability}.
+
+\subsubsection{\textbf{Atomicity}}
+A single transaction should be considered as a whole. The operations contained in it should be either all executed or none at all. Look at the Figure-\ref{Fig.5.3.1}. (country, city) is \textbf{UNIQUE} and ('China', 'Shanghai') has already been in the table. When the transaction is executed, error occurs and the transaction rollbacks. The inserted row of 1st statement won't be in table.
+
+\begin{figure}[H]
+\centering
+\subfigure[Transaction example]{
+\label{Fig.5.3.1}
+\includegraphics[scale=0.2]{resources/figure-5-3.png}
+}
+\subfigure[Select the inserted row]{
+\label{Fig.5.3.2}
+\includegraphics[scale=0.223]{resources/figure-5-3-2.png}
+}
+\end{figure}
+
+\subsubsection{\textbf{Consistency}}
+Transaction can only transform the database from one valid state to another valid state.
+「valid state」 here means database always satisfies some pre-defined rules. Such as various kinds of constraints in table DDL.
+
+ \subsubsection{\textbf{Isolation}}
+When multiple transactions are executed concurrently, the execution of one transaction should not affect the execution of other transactions.
+
+When using parallel transaction, some problem may occur.
+
+\begin{itemize}[itemindent=2em]
+    \item \textbf{Dirty read}: Transaction A reads data that has been modified but not yet committed by transaction B.
+    \item \textbf{Non-repeatable read}: Transaction A reads data D and then transaction B updates D's value. Then A reads D again. The result of these 2 readings don't match, which is caller non-repeatable read.
+    \item \textbf{Phantom read}: One transaction executes two identical query, but get different result sets.
+    \item \textbf{Serialization anomaly}: The result of successfully committing a group of transactions is inconsistent with all possible orderings of running those transactions one at a time(copied from PostgreSQL official document).
+\end{itemize}
+
+To solve the problem caused by above parallel situation, SQL defines 4 level of transaction isolation\upcite{ref3}.
+
+\begin{enumerate}
+    \item
+    \textbf{Read uncommitted}. All transactions can see the execution results of other uncommitted transactions\upcite{ref4}
+    \begin{figure}[H]
+    \centering
+    \subfigure[Initial tabl]{
+    \includegraphics[scale=0.4]{resources/figure-5-4-1.png}
+    \label{fig.5.4.1}
+    }
+    \subfigure[Table after transactions]{
+    \includegraphics[scale=0.4]{resources/figure-5-4-2.png}
+    \label{fig.5.4.2}
+    }
+    \subfigure[Result of time T6]{
+    \includegraphics[scale=0.5]{resources/figure-5-4-4.png}
+    \label{fig.5.4.4}
+    }
+    \subfigure[Transaction step]{
+    \includegraphics[scale=0.3]{resources/figure-5-4-3.png}
+    \label{fig.5.4.3}
+    }
+    \end{figure}
+    At time T6, before transaction A commits, transaction B already read data from the table updated by transaction A, and then Deduct \$100 from Ming's account. After that, if transaction A is committed successfully, there will be no problem. However transaction rollbacks, and then transaction is committed. In this test, we can confirm that isolation level allows other transaction to see current transaction(see Figure \ref{fig.5.4.4}). And \textbf{dirty read} occurs since \textbf{read uncommitted} isolation level. \textbf{Read uncommitted} is the lowest level, so this level is not suggested in daily situation.
+
+    \item
+    \textbf{Read committed}. A transaction can only see the change of certain data by corresponding committed transaction. Set isolation level to \textbf{read committed}, and other steps are the same.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.3]{resources/figure-5-5-1.png}
+        \caption{Result at time T6}
+        \label{fig:my_label}
+    \end{figure}
+    We can see that the result get by query at time T6 is the same as the initial state. So we can confirm that in \textbf{read committed} isolation level, current transaction is visible to other transaction. \textbf{Dirty read} won't happen in this level.
+
+    \item
+    \textbf{Repeatable Read}. Ensure that results got by the querys in the same transaction are all consistency.
+    \begin{figure}[H]
+    \centering
+    \subfigure[query at time T3]{
+    \includegraphics[scale=0.3]{resources/figure-5-6-1.png}
+    \label{fig.5.6.1}
+    }
+    \subfigure[query at time T8]{
+    \includegraphics[scale=0.3]{resources/figure-5-6-2.png}
+    \label{fig.5.6.2}
+    }
+    \subfigure[Transactions step]{
+    \includegraphics[scale=0.3]{resources/figure-5-6-3.png}
+    \label{fig.5.6.3}
+    }
+    \end{figure}
+    The results of query at time $T_3$ and $T_8$ are the same, which indicates that level \textbf{Repeatable read} can solve the problem \textbf{Non-repeatable read}. However, this level may cause another possible problem——\textbf{Phantom read}.
+    \begin{figure}[H]
+    \centering
+    \subfigure[Query at time T3]{
+    \includegraphics[scale=0.3]{resources/figure-5-7-1.png}
+    \label{fig.5.7.1}
+    }
+    \subfigure[Query at time T7]{
+    \includegraphics[scale=0.3]{resources/figure-5-7-2.png}
+    \label{fig.5.7.2}
+    }
+    \subfigure[Error occurs when inserting at time T8]{
+    \includegraphics[scale=0.3]{resources/figure-5-7-3.png}
+    \label{fig.5.7.3}
+    }
+    \subfigure[Transactions step]{
+    \includegraphics[scale=0.3]{resources/figure-5-7-4.png}
+    \label{fig.5.7.4}
+    }
+    \end{figure}
+    \textbf{Repeatable read} ensures results of queries at time $T_3$ and $T_7$ are the same. However, when inserting data at time $T_8$, error occurs(since this row has already been inserted into table in transaction B which has also been committed).
+
+    \item
+    \textbf{Serializable}. The highest isolation level in database. It forces transactions to be sorted to make it impossible for conflicts. Set isolation level to be \textbf{serializable}, the problem above won't occur. \textbf{Serializable} can make database safe, but at the cost of efficiency, besides deadlock may occur if \textbf{serializable}.
+\end{enumerate}
+
+\begin{center}
+\begin{tabu}{|[1.5pt]c|[1.5pt]c|c|c|[1.5pt]}
+    \Xcline{1-4}{1.5pt}
+    \textbf{Isolation Level} & \textbf{Dirty Read} & \textbf{Non-repeatable Read} & \textbf{Phantom read} \\
+    \Xcline{1-4}{1.5pt}
+    Read Uncommitted & Possible & Possible & Possible \\
+    \hline
+    Read Committed & Impossible & Possible & Possible \\
+    \hline
+    Repeatable Read & Impossible & Impossible & Possible \\
+    \hline
+    Serializable & Impossible & Impossible & Impossible \\
+    \Xcline{1-4}{1.5pt}
+\end{tabu}
+\end{center}
+
+Note: expeiments above all use MySQL since some cases can't be implemented in PostgreSQL(such as dirty read)
+
+\subsection{\textbf{User Privileges Management}}
+\textbf{User privileges} is an important concept in database.
+
+\begin{thebibliography}{20}
+\bibitem{ref1}
+\href{https://www.postgresql.org/docs/current/storage-page-layout.html}{Postgresql Database Page Layout}
+
+\bibitem{ref2}
+\href{https://stackoverflow.com/questions/8342172/is-buffered-reader-thread-safe}{Is buffered reader thread safe?}
+
+\bibitem{ref3}
+\href{https://blog.csdn.net/fsdgsddaer/article/details/120606535}{PostgreSQL 事务与并发控制}
+
+\bibitem{ref4}
+\href{https://juejin.cn/post/6844903681196982285}{MySQL事务隔离实验-认识：脏读、不可重复读、幻读}
+
+\end{thebibliography}
+
+\end{document}
