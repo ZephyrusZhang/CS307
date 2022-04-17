@@ -1,4 +1,4 @@
-package assets;
+package io;
 
 import java.io.InputStream;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-import assets.EasyReader;
+import io.EasyReader;
 
 import java.io.*;
 import java.sql.*;
