@@ -52,23 +52,6 @@ public class DatabaseManipulation implements DataManipulation, Closeable {
         }
     }
 
-    @Override
-    public void executeDDL() {
-        StringBuilder sql = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("main.sql"));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sql.append(line);
-            }
-            PreparedStatement preparedStatement = con.prepareStatement(String.valueOf(sql));
-            preparedStatement.executeUpdate();
-            con.commit();
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     //region Import Data Using Entity Class
 
     private PreparedStatement productPS;

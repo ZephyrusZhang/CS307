@@ -1,5 +1,4 @@
 import assets.Supporting;
-import com.github.javafaker.Faker;
 import io.QWriter;
 
 import java.io.BufferedReader;

@@ -4,9 +4,8 @@ import io.QWriter;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.*;
 
-import static assets.Supporting.*;
+import static assets.Supporting.faker;
 
 public class FileManipulationCmp implements DataManipulationCmp {
     private static Connection con;
@@ -14,7 +13,7 @@ public class FileManipulationCmp implements DataManipulationCmp {
 
     public static void main(String[] args) {
         FileManipulationCmp cmp = new FileManipulationCmp();
-        cmp.initSalesmanSource();
+        cmp.deleteModelTest();
     }
 
     @Override

@@ -9,7 +9,7 @@ create table model
 (
     id            serial primary key,
     product_model varchar(128) unique,
-    unit_price    int     not null,
+    unit_price    int     not null check ( unit_price > 0 ),
     product_id    integer not null
 --     constraint product_model_fk foreign key (product_id) references product (id)
 );
@@ -36,7 +36,7 @@ create table salesman
     name             varchar(80) not null,
     salesman_number  varchar(8)  not null,
     gender           varchar(6)  not null,
-    age              int         not null,
+    age              int         not null check ( age > 0 ),
     mobile_phone     varchar(11) not null,
     supply_center_id integer     not null,
     constraint salesman_uk unique (salesman_number)

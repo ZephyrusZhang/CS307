@@ -5,11 +5,6 @@ public class FileManipulation implements DataManipulation {
     }
 
     @Override
-    public void executeDDL() {
-
-    }
-
-    @Override
     public void importOneProduct(String product_code, String product_name, int cnt) {
     }
 
